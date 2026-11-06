@@ -1202,6 +1202,9 @@ export function updateAdminNavVisibility() {
 const ADMIN_HIDDEN_NAV_LINKS = [
     "notificationsBtn",
     "favoritesBtn",
+    // Syllabus browsing is the student experience; staff manage
+    // syllabus inside their own dashboards.
+    "syllabusBtn",
     "certificatesBtn",
     "feedbackBtn",
     // Payment History is a student-facing store page;

@@ -17,6 +17,7 @@ import { initFaculty, initHeaderProfileMenu, initChangePasswordModal } from "./f
 import { setupPdfViewer } from "./pdfviewer.js";
 import { setupSmartSearch } from "./smartsearch.js";
 import { setupDashboardCounts } from "./dashboardcounts.js";
+import { initSyllabus } from "./syllabus.js";
 
 const PAGE =
     document.body?.dataset?.page || "auth";
@@ -111,6 +112,10 @@ document.addEventListener(
                 // Faculty workspace (self-guarded: only wires
                 // and loads on faculty.html for faculty users).
                 await initFaculty();
+
+                // Syllabus module: student page, admin panel and
+                // faculty panel (self-guarded by page/panel presence).
+                await initSyllabus();
             }
 
             // ------------------------------------------------
@@ -118,23 +123,30 @@ document.addEventListener(
             // ------------------------------------------------
 
             if (PAGE === "dashboard") {
-                const category =
+                const requested =
                     new URLSearchParams(window.location.search)
                         .get("category");
 
-                if (category && VALID_CATEGORIES.includes(category)) {
-                    await handleCategoryChange(category);
+                // Always render a category: without a ?category= deep
+                // link the dashboard used to load the data but never
+                // paint the list, so notes stayed empty ("Resources
+                // Found 0") until the user clicked a card.
+                const category =
+                    VALID_CATEGORIES.includes(requested)
+                        ? requested
+                        : "notes";
 
-                    // Keep card active states in sync.
-                    document
-                        .querySelectorAll("[data-dashboard-category]")
-                        .forEach(card => {
-                            card.classList.toggle(
-                                "active",
-                                card.dataset.dashboardCategory === category
-                            );
-                        });
-                }
+                await handleCategoryChange(category);
+
+                // Keep card active states in sync.
+                document
+                    .querySelectorAll("[data-dashboard-category]")
+                    .forEach(card => {
+                        card.classList.toggle(
+                            "active",
+                            card.dataset.dashboardCategory === category
+                        );
+                    });
             }
 
         } catch (error) {

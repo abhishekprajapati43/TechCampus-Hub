@@ -34,12 +34,27 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
 
     boolean existsByUserIdAndCourseIdAndStatus(Long userId, Long courseId, PurchaseStatus status);
 
-    /** An approved purchase whose validity window has not expired yet. */
+    /**
+     * An approved purchase whose validity window has not expired yet.
+     *
+     * <p>{@code validUntil == null} is treated as lifetime access: the
+     * frontend already renders a missing expiry as "Lifetime Access", so the
+     * server must agree or an approved lifetime purchase would unlock nothing.
+     * </p>
+     */
+    @Query("select case when count(p) > 0 then true else false end from Purchase p "
+            + "where p.user.id = :userId and p.course.id = :courseId "
+            + "and p.status = :status "
+            + "and (p.validUntil is null or p.validUntil > :now)")
     boolean existsByUserIdAndCourseIdAndStatusAndValidUntilAfter(
-            Long userId, Long courseId, PurchaseStatus status, LocalDateTime now);
+            @Param("userId") Long userId,
+            @Param("courseId") Long courseId,
+            @Param("status") PurchaseStatus status,
+            @Param("now") LocalDateTime now);
 
     @Query("select p from Purchase p where p.user.id = :userId and p.status = 'APPROVED' "
-            + "and p.validUntil > :now order by p.validUntil desc")
+            + "and (p.validUntil is null or p.validUntil > :now) "
+            + "order by p.validUntil desc")
     List<Purchase> findActiveByUser(@Param("userId") Long userId, @Param("now") LocalDateTime now);
 
     /**
@@ -57,8 +72,13 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
     long countDistinctStudentsByFaculty(@Param("facultyId") Long facultyId);
 
     /** True while the user holds at least one approved, unexpired purchase. */
+    @Query("select case when count(p) > 0 then true else false end from Purchase p "
+            + "where p.user.id = :userId and p.status = :status "
+            + "and (p.validUntil is null or p.validUntil > :now)")
     boolean existsByUserIdAndStatusAndValidUntilAfter(
-            Long userId, PurchaseStatus status, LocalDateTime now);
+            @Param("userId") Long userId,
+            @Param("status") PurchaseStatus status,
+            @Param("now") LocalDateTime now);
 
     // ------------------------------------------------------------- deletion
 

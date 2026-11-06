@@ -4,6 +4,7 @@ import com.example.techcampushubbackend.exception.ResourceNotFoundException;
 import com.example.techcampushubbackend.service.ContentStreamService;
 import com.example.techcampushubbackend.service.NoteService;
 import com.example.techcampushubbackend.service.PyqService;
+import com.example.techcampushubbackend.service.SyllabusService;
 import com.example.techcampushubbackend.service.TimetableService;
 import com.example.techcampushubbackend.service.TnpNoteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,6 +42,7 @@ public class ContentStreamController {
     private final PyqService pyqService;
     private final TnpNoteService tnpNoteService;
     private final TimetableService timetableService;
+    private final SyllabusService syllabusService;
     private final ContentStreamService contentStreamService;
 
     @Operation(summary = "Stream a PDF through the backend (auth + subscription checked)",
@@ -54,6 +56,7 @@ public class ContentStreamController {
             case "pyqs" -> pyqService.requireVisibleFileUrl(id);
             case "tnp-notes" -> tnpNoteService.requireVisibleFileUrl(id);
             case "timetables" -> timetableService.requireVisibleFileUrl(id);
+            case "syllabus" -> syllabusService.requireVisibleFileUrl(id);
             default -> throw new ResourceNotFoundException("Content category", category);
         };
         contentStreamService.stream(sourceUrl, response);

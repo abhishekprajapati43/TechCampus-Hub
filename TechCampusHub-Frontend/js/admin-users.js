@@ -173,9 +173,12 @@ export async function renderAdminUsers() {
                 .sort()
                 .pop();
 
+            // An approved purchase with no expiry is lifetime access,
+            // matching the student-facing labels and the backend's
+            // active-purchase queries (validUntil is null).
             validityLine = latest
                 ? `Valid until ${formatExpiryDateTime(latest)}`
-                : "No expiry";
+                : "Lifetime Access";
         } else if (expired.length) {
             accessBadge = `
                 <span class="rounded-lg bg-red-50 px-2.5 py-1 text-xs font-bold text-red-600">

@@ -26,7 +26,8 @@ const SINGULAR = {
     notes: "Note",
     tnp: "Resource",
     pyq: "PYQ",
-    timetable: "Timetable"
+    timetable: "Timetable",
+    syllabus: "Syllabus"
 };
 
 // Plural noun per card, matching the markup default.
@@ -34,12 +35,13 @@ const PLURAL = {
     notes: "Notes",
     tnp: "Resources",
     pyq: "PYQs",
-    timetable: "Timetables"
+    timetable: "Timetables",
+    syllabus: "Syllabus"
 };
 
 // Cards the summary feeds. Anything else on the page
 // with a count line is left alone.
-const COUNT_KEYS = ["notes", "tnp", "pyq", "timetable"];
+const COUNT_KEYS = ["notes", "tnp", "pyq", "timetable", "syllabus"];
 
 export function setupDashboardCounts() {
     // Only the student dashboard carries the count lines.

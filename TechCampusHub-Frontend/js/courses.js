@@ -112,6 +112,7 @@ const FALLBACK_COURSES = [
 // =====================================================
 
 let coursesCache = null;
+let adminCoursesCache = null;     // every course, hidden ones included
 let coursesMode = "cloud";        // "cloud" | "fallback"
 let purchasesCache = [];          // current user's purchases
 let ownershipLoaded = false;
@@ -315,10 +316,14 @@ export async function loadCourses(force = false) {
     try {
         const rows = await apiGet("/api/courses", false);
 
+        // A successful response is authoritative even when it is
+        // empty: an empty catalog means "no courses published yet",
+        // not "backend offline". Falling back to the bundled demo
+        // catalog here used to show fake courses whose string ids
+        // could never be purchased. Only a real request failure
+        // switches to the offline catalog below.
         coursesMode = "cloud";
-        coursesCache = Array.isArray(rows) && rows.length
-            ? rows.map(normalizeCourse)
-            : loadLocalCourses();
+        coursesCache = (Array.isArray(rows) ? rows : []).map(normalizeCourse);
     } catch (error) {
         console.error("Courses loading error:", error);
 
@@ -327,6 +332,57 @@ export async function loadCourses(force = false) {
     }
 
     return coursesCache;
+}
+
+/**
+ * Admin catalog: GET /api/admin/courses returns EVERY course, including
+ * hidden/inactive ones. The public /api/courses list only carries active
+ * courses, so using it on admin.html made a hidden course impossible to
+ * find, edit or re-activate. Falls back to the public list when the admin
+ * endpoint is unavailable (e.g. the caller is not an admin).
+ */
+export async function loadAdminCourses(force = false) {
+    if (adminCoursesCache && !force) {
+        return adminCoursesCache;
+    }
+
+    try {
+        const rows = await apiGet("/api/admin/courses");
+
+        adminCoursesCache = (Array.isArray(rows) ? rows : [])
+            .map(normalizeCourse);
+    } catch (error) {
+        console.error("Admin courses loading error:", error);
+
+        adminCoursesCache = await loadCourses(force);
+    }
+
+    return adminCoursesCache;
+}
+
+/**
+ * Drop both catalogs and refetch them. A create/update/delete can change
+ * the public list (a course was hidden/shown) and the admin list at the
+ * same time, and leaving either cache stale makes the UI disagree with
+ * the backend until a full reload.
+ */
+async function refreshCourseCaches() {
+    coursesCache = null;
+    adminCoursesCache = null;
+
+    await Promise.all([
+        loadCourses(true),
+        loadAdminCourses(true)
+    ]);
+}
+
+/** Admin-side lookup that also finds hidden/inactive courses. */
+async function findCourseForAdmin(courseId) {
+    const courses = await loadAdminCourses();
+
+    return courses.find(
+        course => String(course.id) === String(courseId)
+    ) || courseById(courseId);
 }
 
 // Local (offline) catalog: reads any browser-stored catalog
@@ -346,9 +402,21 @@ export function courseById(courseId) {
         return null;
     }
 
-    const list = coursesCache || FALLBACK_COURSES;
+    const list = coursesCache || [];
 
-    return list.find(course => String(course.id) === String(courseId)) || null;
+    const found = list.find(
+        course => String(course.id) === String(courseId)
+    );
+
+    if (found) {
+        return found;
+    }
+
+    // A hidden course is absent from the public catalog but still needs a
+    // readable title (purchases table, bundle dropdown, admin edit form).
+    return (adminCoursesCache || []).find(
+        course => String(course.id) === String(courseId)
+    ) || null;
 }
 
 export function courseTitleFor(courseId) {
@@ -410,7 +478,7 @@ export async function createCourse(fields) {
         throw new Error("Course title is required.");
     }
 
-    const courses = await loadCourses(true);
+    const courses = await loadAdminCourses(true);
 
     const row = {
         slug: uniqueSlug(
@@ -434,7 +502,7 @@ export async function createCourse(fields) {
         courseToRequest(row)
     );
 
-    await loadCourses(true);
+    await refreshCourseCaches();
 
     await notifyCourseLaunch(title, row.description);
 
@@ -494,8 +562,10 @@ export async function updateCourse(courseId, fields) {
     }
 
     // The backend PUT needs the required fields (title, price), so the
-    // patch is merged onto the current course before sending.
-    const existing = courseById(courseId);
+    // patch is merged onto the current course before sending. The lookup
+    // goes through the admin catalog so hidden/inactive courses (missing
+    // from the public list) can be edited and re-activated.
+    const existing = await findCourseForAdmin(courseId);
 
     if (!existing) {
         throw new Error("Course not found.");
@@ -506,7 +576,7 @@ export async function updateCourse(courseId, fields) {
         courseToRequest({ ...existing, ...patch })
     );
 
-    await loadCourses(true);
+    await refreshCourseCaches();
 
     return normalizeCourse(updated);
 }
@@ -516,7 +586,7 @@ export async function deleteCourse(courseId) {
         `/api/admin/courses/${courseId}`
     );
 
-    await loadCourses(true);
+    await refreshCourseCaches();
 }
 
 // =====================================================
@@ -789,7 +859,9 @@ export async function populateBundleSelect(selectElement) {
         return;
     }
 
-    const courses = await loadCourses();
+    // Admin upload form: the dropdown must also offer hidden bundles so
+    // content can be attached before a course is made visible.
+    const courses = await loadAdminCourses();
 
     const placeholder = selectElement.querySelector("option[value='']");
 
@@ -1094,7 +1166,7 @@ function validityText(row) {
     }
 
     if (!row.expires_at) {
-        return "No expiry";
+        return "Lifetime Access";
     }
 
     const expired = purchaseExpired(row);
@@ -1201,13 +1273,11 @@ async function renderDashboardAccessLine() {
 
     await refreshOwnership();
 
-    const active = purchasesCache
-        .filter(row => row.status === "approved" && !purchaseExpired(row))
-        .map(row => row.expires_at)
-        .filter(Boolean)
-        .sort();
+    const activePurchases = purchasesCache.filter(
+        row => row.status === "approved" && !purchaseExpired(row)
+    );
 
-    if (!active.length) {
+    if (!activePurchases.length) {
         const expired = purchasesCache.some(
             row => row.status === "approved" && purchaseExpired(row)
         );
@@ -1219,7 +1289,26 @@ async function renderDashboardAccessLine() {
         return;
     }
 
-    const nearest = active[0];
+    // An approved purchase without an expiry is lifetime access (the
+    // backend's active-purchase queries treat a NULL validUntil the same
+    // way). It has no date to show, so it must not fall through to the
+    // "no active access" branch.
+    const expiries = activePurchases
+        .map(row => row.expires_at)
+        .filter(Boolean)
+        .sort();
+
+    if (!expiries.length) {
+        line.innerHTML = `
+            <i class="fa-solid fa-infinity mr-1"></i>
+            Course access:
+            <span class="text-emerald-600">Lifetime Access</span>
+        `;
+        line.className = "text-xs font-bold mt-2 text-emerald-600";
+        return;
+    }
+
+    const nearest = expiries[0];
 
     line.innerHTML = `
         <i class="fa-regular fa-clock mr-1"></i>
@@ -2136,7 +2225,7 @@ async function renderAdminCourseList() {
         return;
     }
 
-    const courses = await loadCourses();
+    const courses = await loadAdminCourses();
 
     if (!courses.length) {
         list.innerHTML = `
@@ -2226,6 +2315,9 @@ async function handleCourseFormSubmit(event) {
         // Optional compare-at price; "" (blank) means no discount.
         mrp_inr: $("courseMrpInput")?.value,
         validity_days: $("courseValidityInput")?.value,
+        is_active: $("courseActiveInput")
+            ? Boolean($("courseActiveInput").checked)
+            : true,
         highlights: String($("courseHighlightsInput")?.value || "")
             .split(",")
             .map(part => part.trim())
@@ -2266,7 +2358,7 @@ async function handleCourseListClick(event) {
         return;
     }
 
-    const courses = await loadCourses();
+    const courses = await loadAdminCourses();
 
     const course = courses.find(
         item => String(item.id) === String(
@@ -2302,6 +2394,12 @@ async function handleCourseListClick(event) {
             "courseHighlightsInput",
             (course.highlights || []).join(", ")
         );
+
+        const activeInput = $("courseActiveInput");
+
+        if (activeInput) {
+            activeInput.checked = course.is_active !== false;
+        }
 
         const saveBtn = $("saveCourseBtn");
 
@@ -2372,6 +2470,7 @@ export function setupCourseAdmin() {
 
     $("refreshCoursesBtn")?.addEventListener("click", async () => {
         try {
+            await loadAdminCourses(true);
             await loadCourses(true);
             await renderAdminCourseList();
         } catch (error) {

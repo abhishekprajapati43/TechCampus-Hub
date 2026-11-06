@@ -7,6 +7,8 @@ import com.example.techcampushubbackend.dto.ContentDtos.NoteRequest;
 import com.example.techcampushubbackend.dto.ContentDtos.NoteResponse;
 import com.example.techcampushubbackend.dto.ContentDtos.PyqRequest;
 import com.example.techcampushubbackend.dto.ContentDtos.PyqResponse;
+import com.example.techcampushubbackend.dto.ContentDtos.SyllabusRequest;
+import com.example.techcampushubbackend.dto.ContentDtos.SyllabusResponse;
 import com.example.techcampushubbackend.dto.ContentDtos.TimetableRequest;
 import com.example.techcampushubbackend.dto.ContentDtos.TimetableResponse;
 import com.example.techcampushubbackend.dto.ContentDtos.TnpNoteRequest;
@@ -31,6 +33,7 @@ import com.example.techcampushubbackend.service.FeedbackService;
 import com.example.techcampushubbackend.service.NoteService;
 import com.example.techcampushubbackend.service.NotificationService;
 import com.example.techcampushubbackend.service.PyqService;
+import com.example.techcampushubbackend.service.SyllabusService;
 import com.example.techcampushubbackend.service.TimetableService;
 import com.example.techcampushubbackend.service.TnpNoteService;
 import com.example.techcampushubbackend.utils.CurrentUserService;
@@ -41,6 +44,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,13 +63,13 @@ import java.util.List;
  *
  * <p>Faculty may create, list and update <b>their own</b> content in all four
  * upload categories (notes, TNP, PYQ, timetables) plus courses; admins may do
- * the same for anything. <b>There is no DELETE route here and none may ever be
- * added</b> - content deletion stays exclusively behind
- * {@code DELETE /api/admin/**}, which is gated twice (URL matcher +
- * {@code @PreAuthorize}).</p>
+ * the same for anything. Deletion stays admin-only for those categories. The
+ * syllabus workspace is the single exception: faculty may delete a syllabus
+ * they uploaded or one of their own courses (ownership re-checked in the
+ * service), so they can replace outdated course documents themselves.</p>
  */
 @Tag(name = "Faculty", description = "Faculty workspace: create/read/update own notes, courses, "
-        + "TNP notes, PYQs and timetables (no delete - deletion is admin-only)")
+        + "TNP notes, PYQs and timetables; manage syllabus of own courses")
 @RestController
 @RequestMapping("/api/faculty")
 @RequiredArgsConstructor
@@ -77,6 +81,7 @@ public class FacultyController {
     private final TnpNoteService tnpNoteService;
     private final PyqService pyqService;
     private final TimetableService timetableService;
+    private final SyllabusService syllabusService;
     private final CloudinaryService cloudinaryService;
     private final CurrentUserService currentUserService;
     private final FacultyDashboardService facultyDashboardService;
@@ -305,6 +310,39 @@ public class FacultyController {
     public ResponseEntity<ApiResponse<TimetableResponse>> updateTimetable(
             @PathVariable Long id, @Valid @RequestBody TimetableRequest request) {
         return ResponseEntity.ok(ApiResponse.ok(timetableService.updateOwned(id, request)));
+    }
+
+    // ---------------------------------------------------------------- syllabus
+
+    @Operation(summary = "Upload a syllabus (faculty/admin) - stamped with the uploader",
+            description = "One active syllabus per course + semester. Sending "
+                    + "replaceExisting=true marks the previous active row Inactive.")
+    @PostMapping("/syllabus")
+    public ResponseEntity<ApiResponse<SyllabusResponse>> createSyllabus(
+            @Valid @RequestBody SyllabusRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.created(syllabusService.createAsOwner(
+                        request, currentUserService.requireUser().getId())));
+    }
+
+    @Operation(summary = "List my syllabus documents (faculty: own uploads + own courses; admins: all)")
+    @GetMapping("/syllabus")
+    public ResponseEntity<ApiResponse<List<SyllabusResponse>>> listSyllabus() {
+        return ResponseEntity.ok(ApiResponse.ok(syllabusService.listOwn()));
+    }
+
+    @Operation(summary = "Update / replace a syllabus (faculty: own only -> 403 otherwise; admins: any)")
+    @PutMapping("/syllabus/{id}")
+    public ResponseEntity<ApiResponse<SyllabusResponse>> updateSyllabus(
+            @PathVariable Long id, @Valid @RequestBody SyllabusRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok(syllabusService.updateOwned(id, request)));
+    }
+
+    @Operation(summary = "Delete a syllabus (faculty: own uploads + own courses only; admins: any)")
+    @DeleteMapping("/syllabus/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteSyllabus(@PathVariable Long id) {
+        syllabusService.deleteOwned(id);
+        return ResponseEntity.ok(ApiResponse.ok("Syllabus deleted", null));
     }
 
     // ------------------------------------------------------------------ files

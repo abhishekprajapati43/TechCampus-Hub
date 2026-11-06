@@ -20,7 +20,8 @@ public final class DashboardDtos {
             long notes,
             long tnp,
             long pyq,
-            long timetable
+            long timetable,
+            long syllabus
     ) {
     }
 }

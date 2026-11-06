@@ -73,17 +73,21 @@ async function postRegistration(body) {
         }
     );
 
-    const user = normalizeUser(envelope?.data?.user);
+    // The backend returns the created user DTO directly as `data`
+    // (it does not wrap it in a `user` field and, because the
+    // account still has to verify its e-mail / be approved, it
+    // never issues a JWT here). Accept both shapes so an older
+    // backend that wraps the user keeps working.
+    const user = normalizeUser(envelope?.data?.user || envelope?.data);
 
-    setAuthToken(envelope?.data?.token || null);
-    setStoredUser(user);
-
-    emitAuthState("SIGNED_IN", buildSession(user));
-
+    // Registration is NOT a login: never leave a stale/fake token or
+    // session behind. Callers rely on `session === null` to show the
+    // "check your email / pending approval" confirmation instead of
+    // redirecting into the dashboard.
     return {
         data: {
             user,
-            session: buildSession(user),
+            session: null,
             // Server copy shown on the success path; callers fall
             // back to their own text when the backend omits it.
             message: envelope?.message || null

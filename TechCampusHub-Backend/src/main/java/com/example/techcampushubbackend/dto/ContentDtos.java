@@ -203,6 +203,58 @@ public final class ContentDtos {
             LocalDateTime createdAt) {
     }
 
+    // ---------------------------------------------------------------- syllabus
+
+    /**
+     * Syllabus upload. One active document is allowed per {@code course} +
+     * {@code semester}; when an active row already exists the caller must send
+     * {@code replaceExisting=true} to confirm the replacement.
+     */
+    public record SyllabusRequest(
+            @Size(max = 200) String title,
+
+            @Size(max = 60) String course,
+
+            Integer semester,
+
+            /** Required on create; optional on update (partial PUT). */
+            @Size(max = 600)
+            @Pattern(regexp = "^$|^https?://.*", message = "fileUrl must be an http(s) URL")
+            String fileUrl,
+
+            @Size(max = 300) String storagePath,
+
+            @Size(max = 255) String fileName,
+
+            Long courseId,
+
+            /** Active / Inactive - defaults to Active. */
+            @Size(max = 20) String status,
+
+            /** true = replace the currently active syllabus for this course+semester. */
+            Boolean replaceExisting) {
+    }
+
+    public record SyllabusResponse(
+            Long id,
+            String title,
+            String course,
+            int semester,
+            String fileUrl,
+            String storagePath,
+            String fileName,
+            Long courseId,
+            String courseTitle,
+            Long uploadedBy,
+            String uploadedByName,
+            String uploaderRole,
+            String status,
+            /** Original upload timestamp (audit + admin list "Uploaded on"). */
+            LocalDateTime uploadDate,
+            LocalDateTime updatedAt,
+            LocalDateTime createdAt) {
+    }
+
     // ------------------------------------------------------------ certificates
 
     public record CertificateRequest(

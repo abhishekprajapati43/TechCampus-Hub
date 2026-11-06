@@ -325,8 +325,14 @@ export async function uploadNotes(event) {
             // removeStorage() handles this safely.
             if (publicId) {
                 try {
+                    // Delete with the SAME resource type Cloudinary
+                    // stored the PDF under (unsigned presets may put
+                    // it under "image", not "raw"). Passing the wrong
+                    // type leaves the asset orphaned in Cloudinary
+                    // even though the database row was never saved.
                     await removeStorage(
-                        publicId
+                        publicId,
+                        resolveResourceType({ file_url: fileUrl })
                     );
                 } catch (cleanupError) {
                     console.error(
@@ -461,8 +467,14 @@ export async function uploadTnp(event) {
 
             if (publicId) {
                 try {
+                    // Delete with the SAME resource type Cloudinary
+                    // stored the PDF under (unsigned presets may put
+                    // it under "image", not "raw"). Passing the wrong
+                    // type leaves the asset orphaned in Cloudinary
+                    // even though the database row was never saved.
                     await removeStorage(
-                        publicId
+                        publicId,
+                        resolveResourceType({ file_url: fileUrl })
                     );
                 } catch (cleanupError) {
                     console.error(
@@ -627,8 +639,14 @@ export async function uploadPyq(event) {
 
             if (publicId) {
                 try {
+                    // Delete with the SAME resource type Cloudinary
+                    // stored the PDF under (unsigned presets may put
+                    // it under "image", not "raw"). Passing the wrong
+                    // type leaves the asset orphaned in Cloudinary
+                    // even though the database row was never saved.
                     await removeStorage(
-                        publicId
+                        publicId,
+                        resolveResourceType({ file_url: fileUrl })
                     );
                 } catch (cleanupError) {
                     console.error(
@@ -806,8 +824,14 @@ export async function uploadTimetable(event) {
             // Try safe cleanup through storage.js.
             if (publicId) {
                 try {
+                    // Delete with the SAME resource type Cloudinary
+                    // stored the PDF under (unsigned presets may put
+                    // it under "image", not "raw"). Passing the wrong
+                    // type leaves the asset orphaned in Cloudinary
+                    // even though the database row was never saved.
                     await removeStorage(
-                        publicId
+                        publicId,
+                        resolveResourceType({ file_url: fileUrl })
                     );
                 } catch (cleanupError) {
                     console.error(

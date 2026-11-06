@@ -12,6 +12,7 @@ const NAV_ID_BY_PAGE = {
     notifications: "notificationsBtn",
     favorites: "favoritesBtn",
     courses: "coursesBtn",
+    syllabus: "syllabusBtn",
     admin: "adminNavBtn",
     // faculty.html lives inside the faculty workspace group,
     // so the Dashboard quick link carries the active state.

@@ -1389,6 +1389,114 @@
                            gap-4"></div>
                         </section>
                             </div>
+                            <!-- -------------------------------- SYLLABUS -->
+                            <div data-admin-panel="syllabus" class="hidden">
+                                <section class="card p-5 md:p-6 mb-5">
+                                    <div class="flex flex-wrap items-center justify-between gap-4 mb-5">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl">
+                                                <i class="fa-solid fa-book-open-reader"></i>
+                                            </div>
+                                            <div>
+                                                <h2 class="text-xl font-extrabold">
+                                                    Syllabus
+                                                </h2>
+                                                <p class="text-sm text-slate-500">
+                                                    Upload, replace or delete syllabus for your courses and semesters.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <button id="refreshFacultySyllabusBtn" type="button"
+                                                class="border border-slate-200 hover:bg-slate-50
+                                                       text-slate-700 font-bold px-5 py-2.5
+                                                       rounded-xl transition">
+                                            <i class="fa-solid fa-arrows-rotate mr-2"></i>
+                                            Refresh
+                                        </button>
+                                    </div>
+
+                                    <p id="facultySyllabusMessage" aria-live="polite" class="hidden"></p>
+
+                                    <form id="facultySyllabusForm"
+                                          class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
+                                        <div class="filter-group">
+                                            <label for="facultySyllabusCourse" class="text-sm font-semibold mb-2 block">
+                                                Course <span class="text-red-500">*</span>
+                                            </label>
+                                            <select id="facultySyllabusCourse" class="input" required>
+                                                <option value="" selected disabled hidden>Select Course</option>
+                                                <option value="BCA">BCA</option>
+                                                <option value="MCA">MCA</option>
+                                                <option value="B.Tech">B.Tech</option>
+                                            </select>
+                                        </div>
+                                        <div class="filter-group">
+                                            <label for="facultySyllabusSemester" class="text-sm font-semibold mb-2 block">
+                                                Semester <span class="text-red-500">*</span>
+                                            </label>
+                                            <select id="facultySyllabusSemester" class="input" required>
+                                                <option value="" selected disabled hidden>Select Semester</option>
+                                            </select>
+                                        </div>
+                                        <div class="filter-group">
+                                            <label for="facultySyllabusTitle" class="text-sm font-semibold mb-2 block">
+                                                Title
+                                                <span class="font-normal text-slate-400">(optional)</span>
+                                            </label>
+                                            <input id="facultySyllabusTitle"
+                                                   class="input"
+                                                   type="text"
+                                                   maxlength="200"
+                                                   placeholder="e.g. MCA Semester III Syllabus">
+                                        </div>
+                                        <div class="filter-group">
+                                            <label for="facultySyllabusBundle" class="text-sm font-semibold mb-2 block">
+                                                My course
+                                                <span class="font-normal text-slate-400">(optional)</span>
+                                            </label>
+                                            <select id="facultySyllabusBundle" class="input">
+                                                <option value="">Free — no course bundle</option>
+                                            </select>
+                                        </div>
+                                        <div class="filter-group">
+                                            <label for="facultySyllabusFile" class="text-sm font-semibold mb-2 block">
+                                                PDF file
+                                            </label>
+                                            <input id="facultySyllabusFile"
+                                                   class="input w-full"
+                                                   type="file"
+                                                   accept="application/pdf">
+                                            <p class="text-xs text-slate-400 mt-1.5">
+                                                PDF only, max 20 MB. Leave blank when editing to keep the current PDF.
+                                            </p>
+                                        </div>
+                                        <button id="facultySaveSyllabusBtn" type="submit"
+                                                class="bg-blue-600 hover:bg-blue-700 text-white
+                                                       rounded-xl font-bold py-3 transition">
+                                            <i class="fa-solid fa-cloud-arrow-up mr-2"></i>
+                                            Upload syllabus
+                                        </button>
+                                        <button id="cancelFacultySyllabusEditBtn" type="button"
+                                                class="hidden border border-slate-200 hover:bg-slate-50
+                                                       text-slate-700 rounded-xl font-bold py-3 transition">
+                                            Cancel edit
+                                        </button>
+                                    </form>
+
+                                    <div class="flex items-center justify-between gap-3 mb-3">
+                                        <p class="text-sm font-semibold text-slate-600">
+                                            Uploaded syllabus
+                                        </p>
+                                        <p class="text-xs text-slate-400">
+                                            One active syllabus per course + semester
+                                        </p>
+                                    </div>
+                                    <div id="facultySyllabusList"
+                                         class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+                                        <!-- Rendered by js/syllabus.js -->
+                                    </div>
+                                </section>
+                            </div>
                             <!-- -------------------------------- NOTIFICATIONS -->
                             <div data-admin-panel="notifications" class="hidden">
                                 <section class="card

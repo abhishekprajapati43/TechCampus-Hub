@@ -41,7 +41,8 @@ const STREAM_CATEGORY = {
     notes: "notes",
     pyq: "pyqs",
     tnp: "tnp-notes",
-    timetable: "timetables"
+    timetable: "timetables",
+    syllabus: "syllabus"
 };
 
 const MIN_ZOOM = 0.5;

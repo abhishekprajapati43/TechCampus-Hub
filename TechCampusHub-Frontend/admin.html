@@ -120,6 +120,9 @@
                                 <button type="button" data-admin-tab="courses" class="admin-tab-btn px-4 py-2 rounded-xl text-sm font-bold text-slate-500 hover:bg-white transition">
                                     <i class="fa-solid fa-graduation-cap mr-2"></i>Courses
                                 </button>
+                                <button type="button" data-admin-tab="syllabus" class="admin-tab-btn px-4 py-2 rounded-xl text-sm font-bold text-slate-500 hover:bg-white transition">
+                                    <i class="fa-solid fa-book-open-reader mr-2"></i>Syllabus
+                                </button>
                                 <!-- Users / Manage Faculty / Payments moved to the
                                      left sidebar (admin-only quick links that
                                      deep-link here via admin.html#users|#faculty|#payments) -->
@@ -357,6 +360,90 @@
                             </form>
                             </div>
                             <!-- =================================================
+     SYLLABUS MANAGEMENT
+================================================== -->
+                            <div data-admin-panel="syllabus" class="hidden mt-8 pt-6 border-t border-slate-200">
+                                <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl shrink-0">
+                                            <i class="fa-solid fa-book-open-reader"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-xl font-extrabold text-slate-900">
+                                                Syllabus Management
+                                            </h3>
+                                            <p class="text-sm text-slate-500 mt-1">
+                                                Upload, replace or delete syllabus PDFs. One active syllabus per course + semester.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button id="refreshSyllabusBtn" type="button" class="border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold px-5 py-2.5 rounded-xl transition">
+                                        <i class="fa-solid fa-arrows-rotate mr-2"></i>
+                                        Refresh
+                                    </button>
+                                </div>
+                                <p id="syllabusAdminMessage" aria-live="polite" class="hidden"></p>
+                                <form id="syllabusAdminForm" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
+                                    <div>
+                                        <label for="syllabusCourse" class="block text-sm font-semibold mb-2">Course</label>
+                                        <select id="syllabusCourse" class="input" required>
+                                            <option value="" selected disabled hidden>Select Course</option>
+                                            <option value="BCA">BCA</option>
+                                            <option value="MCA">MCA</option>
+                                            <option value="B.Tech">B.Tech</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="syllabusSemester" class="block text-sm font-semibold mb-2">Semester</label>
+                                        <select id="syllabusSemester" class="input" required>
+                                            <option value="" selected disabled hidden>Select Semester</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="syllabusTitle" class="block text-sm font-semibold mb-2">
+                                            Title <span class="font-normal text-slate-400">(optional)</span>
+                                        </label>
+                                        <input id="syllabusTitle" class="input" maxlength="200" placeholder="e.g. MCA Semester III Syllabus">
+                                    </div>
+                                    <div>
+                                        <label for="syllabusBundle" class="block text-sm font-semibold mb-2">Course bundle</label>
+                                        <select id="syllabusBundle" class="input">
+                                            <option value="">Free — no bundle</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="syllabusStatus" class="block text-sm font-semibold mb-2">Status</label>
+                                        <select id="syllabusStatus" class="input">
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="syllabusFile" class="block text-sm font-semibold mb-2">
+                                            PDF file
+                                        </label>
+                                        <input id="syllabusFile" class="input w-full" type="file" accept="application/pdf">
+                                        <p class="text-xs text-slate-400 mt-1.5">PDF only, max 20 MB. Leave blank when editing to keep the current PDF.</p>
+                                    </div>
+                                    <button id="saveSyllabusBtn" type="submit" class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold py-3 transition">
+                                        <i class="fa-solid fa-cloud-arrow-up mr-2"></i>
+                                        Upload syllabus
+                                    </button>
+                                    <button id="cancelSyllabusEditBtn" type="button" class="hidden border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl font-bold py-3 transition">
+                                        Cancel edit
+                                    </button>
+                                </form>
+                                <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+                                    <label for="syllabusSearchInput" class="text-sm font-semibold text-slate-600">
+                                        Uploaded syllabus
+                                    </label>
+                                    <input id="syllabusSearchInput" class="input max-w-xs" type="search" placeholder="Search by course or semester">
+                                </div>
+                                <div id="adminSyllabusList" class="space-y-3">
+                                    <!-- Rendered by js/syllabus.js -->
+                                </div>
+                            </div>
+                            <!-- =================================================
      COMMUNITY SETTINGS
 ================================================== -->
                             <div data-admin-panel="settings" class="hidden mt-8
@@ -574,6 +661,11 @@
                                         <p class="text-xs text-slate-400 mt-1.5">Original price shown struck-through for discounts — leave blank for none</p>
                                     </div>
                                     <input id="courseValidityInput" class="input" type="number" min="1" placeholder="Validity (days)" value="365">
+                                    <label class="flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-3 md:col-span-2 lg:col-span-3 cursor-pointer">
+                                        <input id="courseActiveInput" type="checkbox" class="h-4 w-4" checked>
+                                        <span class="text-sm font-semibold text-slate-700">Visible to students</span>
+                                        <span class="text-xs text-slate-400">Uncheck to hide this course from the public catalog, or check it to reactivate a hidden course.</span>
+                                    </label>
                                     <input id="courseDescriptionInput" class="input md:col-span-2" placeholder="Short description">
                                     <input id="courseHighlightsInput" class="input" placeholder="Highlights — comma separated">
                                     <button id="saveCourseBtn" type="submit" class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold py-3 transition lg:col-span-3">

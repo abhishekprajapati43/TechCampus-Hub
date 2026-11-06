@@ -302,6 +302,43 @@ export function normalizeTimetable(timetable) {
     };
 }
 
+/**
+ * Syllabus: one active PDF per program + semester. The backend exposes
+ * fileUrl/storagePath only to staff; student payloads carry the same fields
+ * as null, so the UI never has a direct PDF link to leak. `upload_date` keeps
+ * the original createdAt so the admin list can show "Uploaded on" even after
+ * the PDF is replaced.
+ */
+export function normalizeSyllabus(syllabus) {
+    if (!syllabus) {
+        return null;
+    }
+
+    const publicId = syllabus.storagePath || null;
+    const uploadDate =
+        syllabus.uploadDate || syllabus.createdAt || null;
+
+    return {
+        id: syllabus.id,
+        title: syllabus.title,
+        course: syllabus.course,
+        semester: Number(syllabus.semester) || 0,
+        file_url: syllabus.fileUrl,
+        storage_path: publicId,
+        cloudinary_public_id: publicId,
+        file_name: syllabus.fileName,
+        course_id: syllabus.courseId ?? null,
+        course_title: syllabus.courseTitle ?? null,
+        uploaded_by: syllabus.uploadedBy ?? null,
+        uploaded_by_name: syllabus.uploadedByName || "",
+        uploader_role: syllabus.uploaderRole || "",
+        status: syllabus.status || "Active",
+        upload_date: uploadDate,
+        updated_at: syllabus.updatedAt || null,
+        created_at: syllabus.createdAt || uploadDate
+    };
+}
+
 /** courses: price_inr / mrp_inr / validity_days / sort_order / is_active. */
 export function normalizeCourse(course) {
     if (!course) {
@@ -760,10 +797,72 @@ export function smartSearchSuggestions(query) {
 
 /**
  * Availability counts for the four dashboard cards, resolved once per load
- * from a single request. Shape: { notes, tnp, pyq, timetable }. The backend
- * scopes them to the caller: free content plus active purchases for a
+ * from a single request. Shape: { notes, tnp, pyq, timetable, syllabus }. The
+ * backend scopes them to the caller: free content plus active purchases for a
  * student, everything the app would list for staff.
  */
 export function dashboardSummary() {
     return apiGet("/api/dashboard/summary");
+}
+
+// =====================================================
+// Syllabus
+// =====================================================
+
+/** Student: active syllabus of the caller's program + accessible bundles. */
+export function getSyllabus() {
+    return apiGet("/api/syllabus");
+}
+
+/** Admin: every syllabus row, inactive history included. */
+export function getAdminSyllabus() {
+    return apiGet("/api/admin/syllabus");
+}
+
+/** Faculty: own uploads plus syllabus linked to courses the caller launched. */
+export function getFacultySyllabus() {
+    return apiGet("/api/faculty/syllabus");
+}
+
+/**
+ * Request body for create/update. `replaceExisting: true` confirms replacing
+ * the active syllabus of the same course + semester (the backend answers 409
+ * until the caller confirms).
+ */
+export function syllabusToRequest(row = {}) {
+    return compact({
+        title: row.title ?? null,
+        course: row.course,
+        semester: row.semester,
+        fileUrl: row.file_url,
+        storagePath: row.storage_path ?? row.cloudinary_public_id,
+        fileName: row.file_name,
+        courseId: row.course_id,
+        status: row.status,
+        replaceExisting: row.replace_existing
+    });
+}
+
+export function createSyllabus(row = {}) {
+    return apiPost("/api/admin/syllabus", syllabusToRequest(row));
+}
+
+export function updateSyllabus(id, row = {}) {
+    return apiPut(`/api/admin/syllabus/${id}`, syllabusToRequest(row));
+}
+
+export function deleteSyllabus(id) {
+    return apiDelete(`/api/admin/syllabus/${id}`);
+}
+
+export function createFacultySyllabus(row = {}) {
+    return apiPost("/api/faculty/syllabus", syllabusToRequest(row));
+}
+
+export function updateFacultySyllabus(id, row = {}) {
+    return apiPut(`/api/faculty/syllabus/${id}`, syllabusToRequest(row));
+}
+
+export function deleteFacultySyllabus(id) {
+    return apiDelete(`/api/faculty/syllabus/${id}`);
 }

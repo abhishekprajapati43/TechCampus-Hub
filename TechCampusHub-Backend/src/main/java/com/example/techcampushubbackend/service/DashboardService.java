@@ -6,6 +6,7 @@ import com.example.techcampushubbackend.entity.User;
 import com.example.techcampushubbackend.repository.NoteRepository;
 import com.example.techcampushubbackend.repository.PurchaseRepository;
 import com.example.techcampushubbackend.repository.PyqRepository;
+import com.example.techcampushubbackend.repository.SyllabusRepository;
 import com.example.techcampushubbackend.repository.TimetableRepository;
 import com.example.techcampushubbackend.repository.TnpNoteRepository;
 import com.example.techcampushubbackend.utils.CurrentUserService;
@@ -40,6 +41,7 @@ public class DashboardService {
     private final TnpNoteRepository tnpNoteRepository;
     private final PyqRepository pyqRepository;
     private final TimetableRepository timetableRepository;
+    private final SyllabusRepository syllabusRepository;
     private final PurchaseRepository purchaseRepository;
     private final CurrentUserService currentUserService;
 
@@ -55,7 +57,8 @@ public class DashboardService {
                     noteRepository.count(),
                     tnpNoteRepository.count(),
                     pyqRepository.count(),
-                    timetableRepository.count());
+                    timetableRepository.count(),
+                    syllabusRepository.count());
         }
 
         List<Long> courseIds = accessibleCourseIds(user.getId());
@@ -70,7 +73,8 @@ public class DashboardService {
                 // program (MCA vs B.Tech vs BCA), matching what their
                 // pages list.
                 countPyqs(user, courseIds),
-                countTimetables(user, courseIds));
+                countTimetables(user, courseIds),
+                countSyllabus(user, courseIds));
     }
 
     /**
@@ -107,6 +111,16 @@ public class DashboardService {
                 .filter(t -> t.getCourseBundle() == null
                         || courseIds.contains(t.getCourseBundle().getId()))
                 .filter(t -> ProgramFilter.matches(t.getCourse(), user.getCourse()))
+                .count();
+    }
+
+    /** Active syllabus of the student's program and accessible bundles. */
+    private long countSyllabus(User user, List<Long> courseIds) {
+        return syllabusRepository.findAllByOrderByCreatedAtDesc().stream()
+                .filter(row -> row.isActive())
+                .filter(row -> row.getCourseBundle() == null
+                        || courseIds.contains(row.getCourseBundle().getId()))
+                .filter(row -> ProgramFilter.matches(row.getCourse(), user.getCourse()))
                 .count();
     }
 
