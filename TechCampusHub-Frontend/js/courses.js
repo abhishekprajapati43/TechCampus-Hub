@@ -1221,8 +1221,8 @@ async function renderPurchasesTable(containerId = "myPurchasesList") {
     };
 
     container.innerHTML = `
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left">
+        <div class="table-scroll">
+            <table class="w-full min-w-[720px] text-sm text-left">
                 <thead>
                     <tr class="text-xs uppercase tracking-wide text-slate-400 border-b">
                         <th class="py-2 pr-4">Course</th>

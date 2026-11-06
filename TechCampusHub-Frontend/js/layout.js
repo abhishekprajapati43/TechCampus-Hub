@@ -95,6 +95,18 @@ function markActiveNav(page) {
         .querySelectorAll("#sidebar .nav-item")
         .forEach(item => {
             item.classList.remove("active");
+
+            // On the collapsed tablet rail the labels are hidden, so
+            // expose the same text as a native tooltip/accessible name.
+            const label = item.querySelector(".nav-label");
+
+            if (label && !item.getAttribute("title")) {
+                const text = label.textContent.replace(/\s+/g, " ").trim();
+
+                if (text) {
+                    item.setAttribute("title", text);
+                }
+            }
         });
 
     const activeId = NAV_ID_BY_PAGE[page];

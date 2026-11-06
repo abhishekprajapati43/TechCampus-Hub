@@ -46,16 +46,16 @@
          SITE HEADER
     ====================================================== -->
         <header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
-            <div class="max-w-6xl mx-auto px-5 h-20 flex items-center justify-between gap-4">
-                <a href="./index.html" class="flex items-center gap-3">
-                    <div class="text-logo-icon">
+            <div class="max-w-6xl mx-auto px-4 sm:px-5 h-20 flex items-center justify-between gap-3 sm:gap-4">
+                <a href="./index.html" class="flex items-center gap-2 sm:gap-3 min-w-0">
+                    <div class="text-logo-icon shrink-0">
                         <img src="./assets/logo.png" alt="TechCampus Hub logo">
                     </div>
-                    <div>
-                        <p class="font-extrabold text-lg leading-tight">
+                    <div class="min-w-0">
+                        <p class="font-extrabold text-base sm:text-lg leading-tight truncate">
                             TechCampus_Hub
                         </p>
-                        <p class="text-xs text-slate-500 leading-tight">
+                        <p class="hidden sm:block text-xs text-slate-500 leading-tight truncate">
                             College Learning Portal
                         </p>
                     </div>
@@ -71,23 +71,23 @@
                         Resources
                     </a>
                 </nav>
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 sm:gap-3 shrink-0">
 
                     <!-- Guest actions (Get started only - the header
                          Login link was removed; login stays reachable
                          through the button itself) -->
                     <div id="guestNavActions" class="flex items-center gap-3">
-                        <a href="./login.html" class="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-5 py-2.5 transition">
+                        <a href="./login.html" class="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold px-3 sm:px-5 py-2 sm:py-2.5 whitespace-nowrap transition">
                             Get started
                         </a>
                     </div>
                     
                     <!-- Signed-in actions -->
                     <div id="memberNavActions" class="hidden items-center gap-3">
-                        <a href="./courses.html" class="text-sm font-bold text-slate-600 hover:text-blue-600 transition">
+                        <a href="./courses.html" class="hidden sm:inline text-sm font-bold text-slate-600 hover:text-blue-600 transition">
                             My Courses
                         </a>
-                        <a href="./dashboard.html" class="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-5 py-2.5 transition">
+                        <a href="./dashboard.html" class="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold px-3 sm:px-5 py-2 sm:py-2.5 whitespace-nowrap transition">
                             Dashboard
                         </a>
                     </div>
@@ -202,7 +202,7 @@
                         <!-- Rendered by js/home.js -->
                     </div>
                 </div>
-                <div id="homeCourseGrid" class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch auto-rows-fr">
+                <div id="homeCourseGrid" class="mt-10 grid grid-cols-1 min-[768px]:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch auto-rows-fr">
                     <!-- Rendered by js/home.js -->
                 </div>
                 <p id="homeCourseEmpty" class="hidden mt-8 text-center text-slate-500">
@@ -227,7 +227,7 @@
                             From signup to unlocked notes in four steps
                         </h2>
                     </div>
-                    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-fr">
+                    <div class="mt-10 grid grid-cols-1 min-[768px]:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-fr">
                         <div class="how-step card p-6">
                             <span class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg">
                                 <i class="fa-solid fa-user-plus"></i>
@@ -285,7 +285,7 @@
                         Everything the portal contains
                     </h2>
                 </div>
-                <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-fr">
+                <div class="mt-10 grid grid-cols-1 min-[768px]:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-fr">
                     <div class="card p-6">
                         <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
                             <i class="fa-solid fa-book-open"></i>
@@ -346,11 +346,12 @@
          FOOTER
     ====================================================== -->
         <footer class="border-t border-slate-200 bg-white">
-            <div class="max-w-6xl mx-auto px-5 py-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="max-w-6xl mx-auto px-5 py-12 grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div>
                     <div class="flex items-center gap-3">
                         <div class="text-logo-icon">
-                            <img src="./assets/logo.png" alt="TechCampus Hub logo">
+                            <img src="./assets/logo.png" alt="TechCampus Hub logo"
+                                 loading="lazy" decoding="async">
                         </div>
                         <div>
                             <p class="font-extrabold">TechCampus_Hub</p>

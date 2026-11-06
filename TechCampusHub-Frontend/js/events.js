@@ -57,6 +57,12 @@ import {
 } from "./render.js";
 
 import {
+    collectVideos,
+    setupRelatedVideosModal,
+    setupVideoManagers
+} from "./videos.js";
+
+import {
     setupCommerceEvents
 } from "./courses.js";
 
@@ -1302,6 +1308,10 @@ function setupMobileSidebar() {
             "mobile-open"
         );
 
+        document.body.classList.add(
+            "sidebar-open"
+        );
+
         overlay?.classList.remove(
             "hidden"
         );
@@ -1310,6 +1320,10 @@ function setupMobileSidebar() {
     function closeSidebar() {
         sidebar.classList.remove(
             "mobile-open"
+        );
+
+        document.body.classList.remove(
+            "sidebar-open"
         );
 
         overlay?.classList.add(
@@ -1330,6 +1344,40 @@ function setupMobileSidebar() {
     overlay?.addEventListener(
         "click",
         closeSidebar
+    );
+
+    // The drawer is mobile-only: selecting any destination closes it
+    // before the next page paints, and resizing past the breakpoint
+    // returns the page to its normal, unscrolled state.
+    sidebar
+        .querySelectorAll("a.nav-item, #logoutBtn")
+        .forEach(link => {
+            link.addEventListener(
+                "click",
+                () => {
+                    if (window.innerWidth <= 767) {
+                        closeSidebar();
+                    }
+                }
+            );
+        });
+
+    document.addEventListener(
+        "keydown",
+        event => {
+            if (event.key === "Escape") {
+                closeSidebar();
+            }
+        }
+    );
+
+    window.addEventListener(
+        "resize",
+        () => {
+            if (window.innerWidth > 767) {
+                closeSidebar();
+            }
+        }
     );
 
     document
@@ -1705,6 +1753,21 @@ function setupEditModalEvents() {
             }
 
             try {
+                // Notes / TNP carry an optional ordered video list.
+                // Skip it when the edit form could not load the stored
+                // links, so a failed fetch never wipes them.
+                if (category === "notes" || category === "tnp") {
+                    const videoManager =
+                        $("editResourceVideos");
+
+                    if (
+                        videoManager?.dataset.videoUnavailable !== "true"
+                    ) {
+                        values.videos =
+                            collectVideos(videoManager);
+                    }
+                }
+
                 await editRecord(
                     category,
                     id,
@@ -2369,6 +2432,13 @@ setupStudentSidebarEvents();
     // =================================================
 
     setupAdminEvents();
+
+    // Related Video Links managers (admin + faculty Notes/TNP forms).
+    // Idempotent and self-guarded: no-ops on pages without them.
+    setupVideoManagers();
+
+    // Student "Videos" pill -> on-demand related-videos modal.
+    setupRelatedVideosModal();
 
     // =================================================
     // COMMERCE (courses page + payment approvals)

@@ -38,8 +38,15 @@ import {
     apiPut,
     getStoredUser,
     setStoredUser,
-    normalizeCourse
+    normalizeCourse,
+    getRelatedVideos
 } from "./api.js";
+
+import {
+    collectVideos,
+    resetVideos,
+    setVideos
+} from "./videos.js";
 
 import { uploadPdf } from "./storage.js";
 import { formatPrice } from "./courses.js";
@@ -312,6 +319,8 @@ function renderHeaderProfile() {
         photoTarget.innerHTML = `
             <img src="${escapeHtml(photoUrl)}"
                  alt="${escapeHtml(name)}"
+                 loading="lazy"
+                 decoding="async"
                  class="h-full w-full object-cover">
         `;
     } else {
@@ -1905,15 +1914,16 @@ const EDIT_GROUP_IDS = {
     examYear: "facultyEditGroupExamYear",
     examType: "facultyEditGroupExamType",
     description: "facultyEditGroupDescription",
-    file: "facultyEditGroupFile"
+    file: "facultyEditGroupFile",
+    videos: "facultyEditGroupVideos"
 };
 
 // Which field groups each category exposes. Timetables carry
 // no description; notes/tnp/pyq share subject/title/
 // description/replace-file.
 const EDIT_FIELDS_BY_CATEGORY = {
-    notes: ["subject", "title", "description", "file"],
-    tnp: ["subject", "title", "description", "file"],
+    notes: ["subject", "title", "description", "file", "videos"],
+    tnp: ["subject", "title", "description", "file", "videos"],
     pyq: [
         "subject", "title", "course", "branch",
         "semester", "examYear", "description", "file"
@@ -1929,7 +1939,7 @@ const EDIT_ENDPOINTS = {
     timetable: id => `/api/faculty/timetables/${encodeURIComponent(id)}`
 };
 
-function openEditModal(category, item) {
+async function openEditModal(category, item) {
     const modal = $("facultyEditModal");
 
     if (!modal || !item) {
@@ -1941,6 +1951,19 @@ function openEditModal(category, item) {
         : "notes";
 
     const fields = EDIT_FIELDS_BY_CATEGORY[activeCategory];
+
+    // Videos are fetched only when a Notes/TNP edit form opens.
+    // null = the fetch failed, so a later save must keep the stored list.
+    let videos = item.videos;
+
+    if (activeCategory === "notes" || activeCategory === "tnp") {
+        try {
+            videos = await getRelatedVideos(activeCategory, item.id);
+        } catch (error) {
+            console.warn("Could not load related videos:", error);
+            videos = null;
+        }
+    }
 
     // Show only the field groups this category uses.
     Object.entries(EDIT_GROUP_IDS).forEach(([field, elementId]) => {
@@ -2036,6 +2059,23 @@ function openEditModal(category, item) {
 
     if (fileField) {
         fileField.value = "";
+    }
+
+    const videoManager = $("facultyEditGroupVideos");
+
+    if (videoManager) {
+        const isVideoCategory =
+            activeCategory === "notes" || activeCategory === "tnp";
+
+        if (isVideoCategory && videos !== null) {
+            videoManager.dataset.videoUnavailable = "false";
+            setVideos(videoManager, videos || []);
+        } else {
+            videoManager.dataset.videoUnavailable =
+                isVideoCategory ? "true" : "false";
+
+            setVideos(videoManager, []);
+        }
     }
 
     facultyMessage("facultyEditMessage", "");
@@ -2466,6 +2506,20 @@ async function handleUploadNote(event) {
         return;
     }
 
+    let videos;
+
+    try {
+        // Validate every YouTube link before starting the upload.
+        videos = collectVideos("facultyNoteVideos");
+    } catch (error) {
+        facultyMessage(
+            "uploadNoteMessage",
+            error.message,
+            "error"
+        );
+        return;
+    }
+
     if (button) {
         button.disabled = true;
     }
@@ -2500,6 +2554,8 @@ async function handleUploadNote(event) {
             description: getValue("facultyNoteDescription") || null,
             fileUrl,
             storagePath,
+            // Optional ordered YouTube lectures
+            videos,
             // Optional bundle this note unlocks.
             courseId: getNumber("noteBundleSelect")
         };
@@ -2507,6 +2563,8 @@ async function handleUploadNote(event) {
         await apiPost("/api/faculty/notes", payload);
 
         form?.reset();
+
+        resetVideos("facultyNoteVideos");
 
         facultyMessage(
             "uploadNoteMessage",
@@ -2562,6 +2620,20 @@ async function handleUploadTnp(event) {
         return;
     }
 
+    let videos;
+
+    try {
+        // Validate every YouTube link before starting the upload.
+        videos = collectVideos("facultyTnpVideos");
+    } catch (error) {
+        facultyMessage(
+            messageElement,
+            error.message,
+            "error"
+        );
+        return;
+    }
+
     if (button) {
         button.disabled = true;
     }
@@ -2592,6 +2664,8 @@ async function handleUploadTnp(event) {
             topic,
             fileUrl,
             storagePath,
+            // Optional ordered YouTube lectures
+            videos,
             // Optional bundle this TNP resource unlocks.
             courseId: getNumber("facultyTnpBundle")
         };
@@ -2599,6 +2673,8 @@ async function handleUploadTnp(event) {
         await apiPost("/api/faculty/tnp-notes", payload);
 
         form?.reset();
+
+        resetVideos("facultyTnpVideos");
 
         facultyMessage(
             messageElement,
@@ -3141,6 +3217,16 @@ async function handleEditSubmit(event) {
 
     try {
         const payload = buildEditPayload(category);
+
+        // Notes / TNP carry an optional ordered video list.
+        // Skip it when the form could not load the stored links.
+        if (category === "notes" || category === "tnp") {
+            const videoManager = $("facultyEditGroupVideos");
+
+            if (videoManager?.dataset.videoUnavailable !== "true") {
+                payload.videos = collectVideos(videoManager);
+            }
+        }
 
         if (file) {
             const uploaded = await uploadPdf(

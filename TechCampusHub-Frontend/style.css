@@ -4,6 +4,8 @@
 
         html {
             scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
         }
 
         body {
@@ -20,16 +22,66 @@
 
             background: #f5f8fc;
             color: #102a56;
+
+            /* Never allow a wide table, image or modal to create a
+               page-level horizontal scrollbar. Inner panels keep
+               their own overflow-x-auto scrollers. */
+            overflow-x: hidden;
         }
 
-        button,
+        /* -----------------------------------------------------
+           Responsive media + form defaults
+        ----------------------------------------------------- */
+
+        img,
+        svg,
+        video,
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
         input,
-        select {
+        select,
+        textarea,
+        button {
             font: inherit;
+            max-width: 100%;
         }
 
         button {
             cursor: pointer;
+        }
+
+        /* Main column and page shells must be allowed to shrink
+           inside their flex/grid parents (prevents overflow). */
+        .main-area,
+        #dashboardSection,
+        main,
+        section {
+            min-width: 0;
+        }
+
+        /* Reusable horizontal scroller for data tables. */
+        .table-scroll {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Default floor for tables that do not declare their own
+           utility min-width (page-specific min-w-[…] classes win). */
+        :where(.table-scroll) > table {
+            min-width: 680px;
+        }
+
+        /* Icon chips inside cards/headings must keep their size when
+           the heading next to them wraps on a narrow phone. */
+        .card .w-12.h-12,
+        .card .w-14.h-14,
+        .card .w-16.h-16 {
+            flex-shrink: 0;
         }
 
         .sidebar {
@@ -205,12 +257,20 @@
             display: none;
         }
 
-        .mobile-open {
-            display: flex !important;
-        }
-
         #sidebarOverlay {
             display: none;
+            opacity: 0;
+            transition: opacity .25s ease;
+        }
+
+        @keyframes sidebarOverlayFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Lock the page behind the mobile drawer. */
+        body.sidebar-open {
+            overflow: hidden;
         }
 
         /*
@@ -238,10 +298,19 @@
             color: #1d4ed8;
         }
 
-        @media (max-width: 900px) {
+        /* =====================================================
+           RESPONSIVE SHELL
+           -----------------------------------------------------
+           Mobile   320–767px : hamburger + slide-in drawer
+           Tablet   768–1023px: collapsed icon rail
+           Laptop   1024px+   : full sidebar
+        ===================================================== */
+
+        /* ---------- Tablet: collapsed icon rail ---------- */
+        @media (max-width: 1023px) {
 
             .sidebar {
-                width: 76px;
+                width: 80px !important;
             }
 
             .nav-label,
@@ -249,21 +318,85 @@
                 display: none;
             }
 
+            #closeSidebarBtn {
+                display: none;
+            }
+
+            .sidebar > div:first-child {
+                justify-content: center;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .sidebar nav {
+                padding-left: .5rem;
+                padding-right: .5rem;
+            }
+
+            .sidebar .nav-item {
+                justify-content: center;
+                gap: 0;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .sidebar .nav-item i {
+                width: 1.25rem;
+                text-align: center;
+            }
+
             .main-area {
-                margin-left: 76px !important;
+                margin-left: 80px !important;
             }
         }
 
-        @media (max-width: 700px) {
+        /* ---------- Mobile: slide-in drawer ---------- */
+        @media (max-width: 767px) {
 
             .sidebar {
-                display: none;
-                width: 270px;
-                z-index: 80;
+                display: flex !important;
+
+                width: min(18rem, 85vw) !important;
+
+                transform: translateX(-100%);
+                visibility: hidden;
+                pointer-events: none;
+
+                transition:
+                    transform .25s ease,
+                    visibility .25s ease;
             }
 
             .sidebar.mobile-open {
-                display: flex !important;
+                transform: translateX(0);
+                visibility: visible;
+                pointer-events: auto;
+            }
+
+            /* Restore full labels inside the drawer. */
+            .sidebar .nav-label,
+            .sidebar .brand-text {
+                display: block;
+            }
+
+            .sidebar > div:first-child {
+                justify-content: flex-start;
+                padding-left: 1.25rem;
+                padding-right: 1.25rem;
+            }
+
+            .sidebar nav {
+                padding: 1rem;
+            }
+
+            .sidebar .nav-item {
+                justify-content: flex-start;
+                gap: .75rem;
+                padding: .75rem 1rem;
+            }
+
+            #closeSidebarBtn {
+                display: block;
             }
 
             .main-area {
@@ -276,6 +409,20 @@
 
             #sidebarOverlay:not(.hidden) {
                 display: block;
+                animation: sidebarOverlayFade .25s ease forwards;
+            }
+        }
+
+        /* ---------- Small phones: tighter page gutters ---------- */
+        @media (max-width: 420px) {
+
+            .p-5 {
+                padding: 1rem !important;
+            }
+
+            .card.p-6,
+            section.card.p-6 {
+                padding: 1.15rem;
             }
         }
 
@@ -324,5 +471,73 @@
                 content: "";
                 flex: 1;
                 border-top: 2px dashed #bfdbfe;
+            }
+        }
+
+        /* =====================================================
+           MODALS — keep every dialog inside the viewport
+        ===================================================== */
+
+        @media (max-width: 640px) {
+
+            #editResourceModal > div,
+            #purchaseValidityModal > div,
+            #courseReviewsModal > div,
+            #facultyChangePasswordModal > div,
+            #buyModal > div,
+            #facultyEditModal > div,
+            #facultyCourseContentModal > div,
+            #declarationModal > div,
+            #relatedVideosModal > div {
+                max-width: 100%;
+                max-height: calc(100vh - 1.5rem);
+                max-height: calc(100dvh - 1.5rem);
+                padding: 1.15rem;
+            }
+
+            #purchaseValidityModal > div,
+            #courseReviewsModal > div,
+            #facultyChangePasswordModal > div,
+            #declarationModal > div {
+                overflow-y: auto;
+            }
+
+            #pdfViewerModal > div > div:first-child,
+            #pdfViewerModal > div > div:nth-child(2) {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            #pdfViewerBody {
+                padding: .75rem;
+            }
+
+            /* Calendar-style 4-up preset row becomes 2-up on phones. */
+            #purchaseValidityModal .grid.grid-cols-4 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        /* =====================================================
+           RESPONSIVE TYPOGRAPHY
+        ===================================================== */
+
+        @media (max-width: 420px) {
+
+            h1 {
+                font-size: clamp(1.65rem, 8vw, 2rem);
+                line-height: 1.15;
+            }
+
+            h2 {
+                font-size: clamp(1.3rem, 6vw, 1.6rem);
+                line-height: 1.2;
+            }
+        }
+
+        @media (min-width: 1600px) {
+
+            body {
+                font-size: 1.0625rem;
             }
         }

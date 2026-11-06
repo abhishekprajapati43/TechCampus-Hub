@@ -3,6 +3,7 @@ package com.example.techcampushubbackend.controller;
 import com.example.techcampushubbackend.dto.ApiResponse;
 import com.example.techcampushubbackend.dto.ContentDtos.TnpNoteRequest;
 import com.example.techcampushubbackend.dto.ContentDtos.TnpNoteResponse;
+import com.example.techcampushubbackend.dto.ContentDtos.VideoLinkResponse;
 import com.example.techcampushubbackend.service.ContentStreamService;
 import com.example.techcampushubbackend.service.TnpNoteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,6 +45,14 @@ public class TnpNoteController {
     @GetMapping("/tnp-notes/{id}")
     public ResponseEntity<ApiResponse<TnpNoteResponse>> get(@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.ok(tnpNoteService.getVisible(id)));
+    }
+
+    @Operation(summary = "List related YouTube videos for one TNP note (student)",
+            description = "Loaded only when the note's viewer opens; guarded by the "
+                    + "same purchase access checks as the note itself.")
+    @GetMapping("/tnp-notes/{id}/videos")
+    public ResponseEntity<ApiResponse<List<VideoLinkResponse>>> videos(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.ok(tnpNoteService.listVisibleVideos(id)));
     }
 
     @Operation(summary = "Download TNP note PDF (streams through the backend)",

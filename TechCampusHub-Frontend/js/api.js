@@ -218,6 +218,9 @@ export function normalizeNote(note) {
         // (GET /api/admin/notes); student payloads carry null.
         created_by_name: note.createdByName ?? null,
         created_by_role: note.createdByRole ?? null,
+        // Number of related YouTube lectures (list payloads only). The
+        // rows themselves are fetched on demand when the button opens.
+        video_count: note.videoCount ?? 0,
         created_at: note.createdAt
     };
 }
@@ -250,6 +253,27 @@ export function normalizePyq(pyq) {
     };
 }
 
+/**
+ * Related YouTube lectures: the backend's VideoLinkResponse is
+ * exposed with both camelCase and the snake_case keys the UI reads.
+ */
+export function normalizeVideo(video) {
+    if (!video) {
+        return null;
+    }
+
+    return {
+        id: video.id,
+        note_or_tnp_id: video.noteOrTnpId ?? null,
+        title: video.videoTitle || "",
+        video_title: video.videoTitle || "",
+        youtube_url: video.youtubeUrl || "",
+        uploaded_by: video.uploadedBy ?? null,
+        sort_order: video.sortOrder ?? 0,
+        created_at: video.createdAt
+    };
+}
+
 /** TNP: the backend calls the subject-area label `topic`. */
 export function normalizeTnp(tnp) {
     if (!tnp) {
@@ -266,6 +290,8 @@ export function normalizeTnp(tnp) {
         storage_path: tnp.storagePath,
         course_id: tnp.courseId ?? null,
         course_title: tnp.courseTitle ?? null,
+        // Number of related YouTube lectures (list payloads only).
+        video_count: tnp.videoCount ?? 0,
         created_at: tnp.createdAt
     };
 }
@@ -605,7 +631,10 @@ export function noteToRequest(row = {}) {
         description: row.description,
         fileUrl: row.file_url,
         storagePath: row.storage_path,
-        courseId: row.course_id
+        courseId: row.course_id,
+        // undefined = leave existing videos untouched (partial PUT);
+        // [] = clear them; a non-empty list replaces the ordered set.
+        videos: row.videos
     });
 }
 
@@ -631,7 +660,8 @@ export function tnpToRequest(row = {}) {
         description: row.description,
         fileUrl: row.file_url,
         storagePath: row.storage_path,
-        courseId: row.course_id
+        courseId: row.course_id,
+        videos: row.videos
     });
 }
 
@@ -803,6 +833,33 @@ export function smartSearchSuggestions(query) {
  */
 export function dashboardSummary() {
     return apiGet("/api/dashboard/summary");
+}
+
+// =====================================================
+// Related videos
+// =====================================================
+
+/**
+ * Videos attached to one Notes or TNP record. Fetched on demand when the
+ * student clicks a card's "Videos" pill (or when an edit form opens), so
+ * list pages never carry the video rows themselves.
+ *
+ * @param {"notes"|"tnp"|"tnp-notes"} category
+ * @param {number|string} id
+ */
+export function getRelatedVideos(category, id) {
+    const segment =
+        category === "tnp" || category === "tnp-notes"
+            ? "tnp-notes"
+            : "notes";
+
+    return apiGet(
+        `/api/${segment}/${encodeURIComponent(id)}/videos`
+    ).then(rows =>
+        Array.isArray(rows)
+            ? rows.map(normalizeVideo).filter(Boolean)
+            : []
+    );
 }
 
 // =====================================================

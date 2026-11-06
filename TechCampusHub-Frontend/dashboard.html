@@ -75,9 +75,11 @@
                                 <div class="flex
                            items-center
                            gap-4
+                           min-w-0
                            text-center">
                                     <div class="w-14
                                h-14
+                               shrink-0
                                rounded-2xl
                                bg-blue-50
                                flex
@@ -88,14 +90,15 @@
                                         <i class="fa-solid
                                    fa-graduation-cap"></i>
                                     </div>
-                                    <div>
+                                    <div class="min-w-0">
                                         <p class="text-slate-500
                                    text-sm">
                                             Welcome
                                         </p>
                                         <h2 id="profileNameWelcome" class="text-2xl
                                    md:text-3xl
-                                   font-extrabold">
+                                   font-extrabold
+                                   break-words">
                                             Student!
                                         </h2>
                                         <p class="text-slate-500
@@ -172,8 +175,11 @@
                  QUICK ACCESS
             ================================================== -->
                         <section class="grid
-                       xl:grid-cols-5
-                       md:grid-cols-2
+                       grid-cols-1
+                       min-[768px]:grid-cols-2
+                       lg:grid-cols-3
+                       xl:grid-cols-4
+                       2xl:grid-cols-5
                        gap-4
                        mb-5">
                             <!-- Notes -->
@@ -443,7 +449,7 @@
                  SMART SEARCH (content search inside uploaded PDFs)
             ================================================== -->
                         <section id="searchFiltersSection" class="card p-5 md:p-6 mb-5">
-                            <div class="flex items-center justify-between mb-5">
+                            <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
                                 <div>
                                     <h2 class="text-lg font-extrabold">Smart Search</h2>
                                     <p class="text-sm text-slate-500">
@@ -488,8 +494,10 @@
                        md:p-6
                        mb-5">
                             <div class="flex
+                           flex-wrap
                            items-center
                            justify-between
+                           gap-3
                            mb-4">
                                 <div>
                                     <h2 class="text-xl

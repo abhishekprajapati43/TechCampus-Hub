@@ -284,23 +284,27 @@ export async function renderAdminUsers() {
                         <i class="fa-solid fa-user"></i>
                     </div>
                     <div class="min-w-0">
-                        <p class="font-bold text-slate-800 truncate">
+                        <p class="font-bold text-slate-800 break-words">
                             ${escapeHtml(student.name || "Student")}
-                            ${roleBadge}
-                            ${declarationBadge}
-                            ${registrationBadge}
-                            ${suspendedBadge}
                         </p>
-                        <p class="text-sm text-slate-500 truncate">
+                        ${roleBadge || declarationBadge || registrationBadge || suspendedBadge
+                            ? `<div class="mt-1 flex flex-wrap items-center gap-2">
+                                   ${roleBadge}
+                                   ${declarationBadge}
+                                   ${registrationBadge}
+                                   ${suspendedBadge}
+                               </div>`
+                            : ""}
+                        <p class="text-sm text-slate-500 break-words">
                             ${escapeHtml(student.email || "")}
                         </p>
                         ${details
-                            ? `<p class="text-xs text-slate-400 truncate">${escapeHtml(details)}</p>`
+                            ? `<p class="text-xs text-slate-400 break-words">${escapeHtml(details)}</p>`
                             : ""}
                     </div>
                 </div>
-                <div class="flex flex-col items-end gap-1">
-                    <div class="flex items-center gap-2">
+                <div class="flex flex-col items-end gap-1 max-w-full">
+                    <div class="flex flex-wrap items-center justify-end gap-2">
                         ${pending.length
                             ? `<span class="rounded-lg bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700">
                                    ${pending.length} pending
@@ -309,9 +313,9 @@ export async function renderAdminUsers() {
                         ${accessBadge}
                     </div>
                     ${validityLine
-                        ? `<p class="text-xs text-slate-400">${escapeHtml(validityLine)}</p>`
+                        ? `<p class="text-xs text-slate-400 text-right">${escapeHtml(validityLine)}</p>`
                         : ""}
-                    <div class="flex items-center gap-2 mt-1">
+                    <div class="flex flex-wrap items-center justify-end gap-2 mt-1">
                         ${toggleBtn}
                         ${deleteBtn}
                     </div>
@@ -460,20 +464,22 @@ export async function renderFacultyList(rows) {
                         <i class="fa-solid fa-user"></i>
                     </div>
                     <div class="min-w-0">
-                        <p class="font-bold text-slate-800 truncate">
+                        <p class="font-bold text-slate-800 break-words">
                             ${escapeHtml(member.name || "Faculty")}
+                        </p>
+                        <div class="mt-1 flex flex-wrap items-center gap-2">
                             ${registrationStatusPill(status)}
                             ${declarationBadge}
-                        </p>
-                        <p class="text-sm text-slate-500 truncate">
+                        </div>
+                        <p class="text-sm text-slate-500 break-words">
                             ${escapeHtml(member.email || "")}
                         </p>
                         ${member.phone
-                            ? `<p class="text-xs text-slate-400 truncate">${escapeHtml(member.phone)}</p>`
+                            ? `<p class="text-xs text-slate-400 break-words">${escapeHtml(member.phone)}</p>`
                             : ""}
                     </div>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex flex-wrap items-center justify-end gap-2 max-w-full">
                     ${approveBtn}
                     ${rejectBtn}
                     ${deleteBtn}

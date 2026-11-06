@@ -3,6 +3,7 @@ package com.example.techcampushubbackend.controller;
 import com.example.techcampushubbackend.dto.ApiResponse;
 import com.example.techcampushubbackend.dto.ContentDtos.NoteRequest;
 import com.example.techcampushubbackend.dto.ContentDtos.NoteResponse;
+import com.example.techcampushubbackend.dto.ContentDtos.VideoLinkResponse;
 import com.example.techcampushubbackend.service.ContentStreamService;
 import com.example.techcampushubbackend.service.NoteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,6 +49,14 @@ public class NoteController {
     @GetMapping("/notes/{id}")
     public ResponseEntity<ApiResponse<NoteResponse>> get(@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.ok(noteService.getVisible(id)));
+    }
+
+    @Operation(summary = "List related YouTube videos for one note (student)",
+            description = "Loaded only when the note's viewer opens; guarded by the "
+                    + "same purchase/program access checks as the note itself.")
+    @GetMapping("/notes/{id}/videos")
+    public ResponseEntity<ApiResponse<List<VideoLinkResponse>>> videos(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.ok(noteService.listVisibleVideos(id)));
     }
 
     @Operation(summary = "Download note PDF (streams through the backend)",

@@ -223,3 +223,43 @@ CREATE TABLE IF NOT EXISTS feedback (
     updated_at TIMESTAMP
 );
 CREATE INDEX IF NOT EXISTS idx_feedback_course ON feedback (course_id);
+
+-- ---------------------------------------------------------------------
+-- 12. related_videos (YouTube lectures attached to notes / tnp_notes)
+-- ---------------------------------------------------------------------
+-- note_or_tnp_id is a soft reference resolved together with content_type;
+-- the owning content service deletes a record's rows when the record itself
+-- is deleted (no FK because the column points at two different tables).
+CREATE TABLE IF NOT EXISTS related_videos (
+    id             BIGSERIAL PRIMARY KEY,
+    content_type   VARCHAR(20)  NOT NULL CHECK (content_type IN ('NOTE', 'TNP')),
+    note_or_tnp_id BIGINT       NOT NULL,
+    video_title    VARCHAR(200) NOT NULL,
+    youtube_url    VARCHAR(600) NOT NULL,
+    uploaded_by    BIGINT,                                -- users.id (soft ref: admin/faculty uploader)
+    sort_order     INTEGER      NOT NULL DEFAULT 0,       -- zero-based display order
+    created_at     TIMESTAMP    NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_related_videos_parent
+    ON related_videos (content_type, note_or_tnp_id);
+
+-- Optional one-off migration for databases created before this feature.
+-- Wrapped in a DO block so a re-run is a harmless no-op.
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.tables
+                   WHERE table_name = 'related_videos') THEN
+        CREATE TABLE related_videos (
+            id             BIGSERIAL PRIMARY KEY,
+            content_type   VARCHAR(20)  NOT NULL CHECK (content_type IN ('NOTE', 'TNP')),
+            note_or_tnp_id BIGINT       NOT NULL,
+            video_title    VARCHAR(200) NOT NULL,
+            youtube_url    VARCHAR(600) NOT NULL,
+            uploaded_by    BIGINT,
+            sort_order     INTEGER      NOT NULL DEFAULT 0,
+            created_at     TIMESTAMP    NOT NULL DEFAULT NOW()
+        );
+        CREATE INDEX idx_related_videos_parent
+            ON related_videos (content_type, note_or_tnp_id);
+    END IF;
+END $$;

@@ -2,11 +2,14 @@ package com.example.techcampushubbackend.service;
 
 import com.example.techcampushubbackend.dto.ContentDtos.TnpNoteRequest;
 import com.example.techcampushubbackend.dto.ContentDtos.TnpNoteResponse;
+import com.example.techcampushubbackend.dto.ContentDtos.VideoLinkResponse;
+import com.example.techcampushubbackend.entity.RelatedVideoType;
 import com.example.techcampushubbackend.entity.Role;
 import com.example.techcampushubbackend.entity.TnpNote;
 import com.example.techcampushubbackend.entity.User;
 import com.example.techcampushubbackend.exception.ResourceNotFoundException;
 import com.example.techcampushubbackend.repository.TnpNoteRepository;
+import com.example.techcampushubbackend.security.AuthenticatedUser;
 import com.example.techcampushubbackend.utils.CurrentUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.example.techcampushubbackend.utils.ContentUtils.requireFileUrl;
 import static com.example.techcampushubbackend.utils.ContentUtils.resolveTitle;
@@ -28,21 +32,22 @@ public class TnpNoteService {
     private final PurchaseService purchaseService;
     private final CurrentUserService currentUserService;
     private final PdfIndexService pdfIndexService;
+    private final RelatedVideoService relatedVideoService;
 
     @Transactional(readOnly = true)
     public List<TnpNoteResponse> listVisible() {
         User user = currentUserService.requireUser();
-        return tnpNoteRepository.findAllByOrderByCreatedAtDesc().stream()
+        return withVideoCounts(tnpNoteRepository.findAllByOrderByCreatedAtDesc().stream()
                 .filter(note -> canAccess(note, user))
                 .map(note -> toVisibleResponse(note, user))
-                .toList();
+                .toList());
     }
 
     @Transactional(readOnly = true)
     public List<TnpNoteResponse> listAll() {
-        return tnpNoteRepository.findAllByOrderByCreatedAtDesc().stream()
+        return withVideoCounts(tnpNoteRepository.findAllByOrderByCreatedAtDesc().stream()
                 .map(TnpNoteService::toResponse)
-                .toList();
+                .toList());
     }
 
     /**
@@ -52,12 +57,12 @@ public class TnpNoteService {
     @Transactional(readOnly = true)
     public List<TnpNoteResponse> listOwn() {
         User user = currentUserService.requireUser();
-        return tnpNoteRepository.findAllByOrderByCreatedAtDesc().stream()
+        return withVideoCounts(tnpNoteRepository.findAllByOrderByCreatedAtDesc().stream()
                 .filter(note -> user.getRole() == Role.ADMIN
                         || (note.getCreatedBy() != null
                             && note.getCreatedBy().equals(user.getId())))
                 .map(TnpNoteService::toResponse)
-                .toList();
+                .toList());
     }
 
     /** Every TNP note linked to a course bundle (ownership checked by the caller). */
@@ -66,11 +71,11 @@ public class TnpNoteService {
         if (courseId == null) {
             return List.of();
         }
-        return tnpNoteRepository.findAllByOrderByCreatedAtDesc().stream()
+        return withVideoCounts(tnpNoteRepository.findAllByOrderByCreatedAtDesc().stream()
                 .filter(note -> note.getCourseBundle() != null
                         && courseId.equals(note.getCourseBundle().getId()))
                 .map(TnpNoteService::toResponse)
-                .toList();
+                .toList());
     }
 
     @Transactional(readOnly = true)
@@ -105,6 +110,8 @@ public class TnpNoteService {
                 .createdBy(ownerId)
                 .build();
         TnpNote saved = tnpNoteRepository.save(note);
+        relatedVideoService.replace(RelatedVideoType.TNP, saved.getId(),
+                request.videos(), videoUploaderId(ownerId));
         reindexForSearch(saved);
         return toResponse(saved);
     }
@@ -137,14 +144,41 @@ public class TnpNoteService {
         if (request.storagePath() != null) note.setStoragePath(request.storagePath());
         if (request.courseId() != null) note.setCourseBundle(loadBundle(request.courseId()));
         TnpNote saved = tnpNoteRepository.save(note);
+        relatedVideoService.replace(RelatedVideoType.TNP, saved.getId(),
+                request.videos(), currentUploaderId());
         reindexForSearch(saved);
         return toResponse(saved);
     }
 
     @Transactional
     public void delete(Long id) {
+        relatedVideoService.deleteAll(RelatedVideoType.TNP, id);
         tnpNoteRepository.delete(require(id));
         pdfIndexService.removeIndexAsync(PdfIndexService.CAT_TNP, id);
+    }
+
+    /**
+     * Videos for one TNP note, guarded by the same purchase/visibility rules as
+     * {@link #getVisible(Long)}.
+     */
+    @Transactional(readOnly = true)
+    public List<VideoLinkResponse> listVisibleVideos(Long id) {
+        User user = currentUserService.requireUser();
+        TnpNote note = require(id);
+        if (!canAccess(note, user)) {
+            throw new ResourceNotFoundException("TNP note", id);
+        }
+        return relatedVideoService.list(RelatedVideoType.TNP, id);
+    }
+
+    /** Owner stamp for a video link: the uploader being created for, else the caller. */
+    private Long videoUploaderId(Long ownerId) {
+        return ownerId != null ? ownerId : currentUploaderId();
+    }
+
+    private Long currentUploaderId() {
+        AuthenticatedUser principal = currentUserService.principal();
+        return principal == null ? null : principal.id();
     }
 
     /** Keeps the smart-search index in sync after every write. */
@@ -184,7 +218,23 @@ public class TnpNoteService {
                 note.getFileUrl(), note.getStoragePath(),
                 note.getCourseBundle() == null ? null : note.getCourseBundle().getId(),
                 note.getCourseBundle() == null ? null : note.getCourseBundle().getTitle(),
-                note.getCreatedAt());
+                note.getCreatedAt(),
+                0);
+    }
+
+    /**
+     * Stamp the related-video count used by the list cards' "Related Videos"
+     * button. One grouped query for the whole page - the video rows themselves
+     * are fetched on demand when the button is clicked.
+     */
+    private List<TnpNoteResponse> withVideoCounts(List<TnpNoteResponse> notes) {
+        if (notes.isEmpty()) {
+            return notes;
+        }
+        Map<Long, Integer> counts = relatedVideoService.counts(RelatedVideoType.TNP);
+        return notes.stream()
+                .map(note -> note.withVideoCount(counts.getOrDefault(note.id(), 0)))
+                .toList();
     }
 
     /**
@@ -205,7 +255,8 @@ public class TnpNoteService {
                 null,
                 null,
                 base.courseId(), base.courseTitle(),
-                base.createdAt());
+                base.createdAt(),
+                base.videoCount());
     }
 
     /**

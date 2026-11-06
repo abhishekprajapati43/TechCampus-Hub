@@ -2,12 +2,15 @@ package com.example.techcampushubbackend.service;
 
 import com.example.techcampushubbackend.dto.ContentDtos.NoteRequest;
 import com.example.techcampushubbackend.dto.ContentDtos.NoteResponse;
+import com.example.techcampushubbackend.dto.ContentDtos.VideoLinkResponse;
 import com.example.techcampushubbackend.entity.Note;
+import com.example.techcampushubbackend.entity.RelatedVideoType;
 import com.example.techcampushubbackend.entity.Role;
 import com.example.techcampushubbackend.entity.User;
 import com.example.techcampushubbackend.exception.ResourceNotFoundException;
 import com.example.techcampushubbackend.repository.NoteRepository;
 import com.example.techcampushubbackend.repository.UserRepository;
+import com.example.techcampushubbackend.security.AuthenticatedUser;
 import com.example.techcampushubbackend.utils.CurrentUserService;
 import com.example.techcampushubbackend.utils.ProgramFilter;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +41,7 @@ public class NoteService {
     private final CurrentUserService currentUserService;
     private final UserRepository userRepository;
     private final PdfIndexService pdfIndexService;
+    private final RelatedVideoService relatedVideoService;
 
     /**
      * Listing for the public endpoint - filters out paid bundles the caller
@@ -49,14 +53,14 @@ public class NoteService {
     public List<NoteResponse> listVisible() {
         User user = currentUserService.requireUser();
         boolean staff = user.getRole() == Role.ADMIN || user.getRole() == Role.FACULTY;
-        return noteRepository.findAllByOrderByCreatedAtDesc().stream()
+        return withVideoCounts(noteRepository.findAllByOrderByCreatedAtDesc().stream()
                 .filter(note -> canAccess(note, user))
                 // Students only ever see notes of their own program
                 // (MCA vs B.Tech vs BCA); general rows stay visible to all.
                 .filter(note -> staff
                         || ProgramFilter.matches(note.getCourse(), user.getCourse()))
                 .map(note -> toVisibleResponse(note, user))
-                .toList();
+                .toList());
     }
 
     /**
@@ -65,7 +69,7 @@ public class NoteService {
      */
     @Transactional(readOnly = true)
     public List<NoteResponse> listAll() {
-        return withOwners(noteRepository.findAllByOrderByCreatedAtDesc());
+        return withVideoCounts(withOwners(noteRepository.findAllByOrderByCreatedAtDesc()));
     }
 
     /**
@@ -75,12 +79,12 @@ public class NoteService {
     @Transactional(readOnly = true)
     public List<NoteResponse> listOwn() {
         User user = currentUserService.requireUser();
-        return noteRepository.findAllByOrderByCreatedAtDesc().stream()
+        return withVideoCounts(noteRepository.findAllByOrderByCreatedAtDesc().stream()
                 .filter(note -> user.getRole() == Role.ADMIN
                         || (note.getCreatedBy() != null
                             && note.getCreatedBy().equals(user.getId())))
                 .map(NoteService::toResponse)
-                .toList();
+                .toList());
     }
 
     /**
@@ -93,11 +97,11 @@ public class NoteService {
         if (courseId == null) {
             return List.of();
         }
-        return noteRepository.findAllByOrderByCreatedAtDesc().stream()
+        return withVideoCounts(noteRepository.findAllByOrderByCreatedAtDesc().stream()
                 .filter(note -> note.getCourseBundle() != null
                         && courseId.equals(note.getCourseBundle().getId()))
                 .map(NoteService::toResponse)
-                .toList();
+                .toList());
     }
 
     @Transactional(readOnly = true)
@@ -140,6 +144,8 @@ public class NoteService {
                 .createdBy(ownerId)
                 .build();
         Note saved = noteRepository.save(note);
+        relatedVideoService.replace(RelatedVideoType.NOTE, saved.getId(),
+                request.videos(), videoUploaderId(ownerId));
         reindexForSearch(saved);
         return toResponse(saved);
     }
@@ -162,6 +168,8 @@ public class NoteService {
             note.setCourseBundle(loadBundle(request.courseId()));
         }
         Note saved = noteRepository.save(note);
+        relatedVideoService.replace(RelatedVideoType.NOTE, saved.getId(),
+                request.videos(), currentUploaderId());
         reindexForSearch(saved);
         return toResponse(saved);
     }
@@ -199,8 +207,34 @@ public class NoteService {
     @Transactional
     public void delete(Long id) {
         Note note = require(id);
+        relatedVideoService.deleteAll(RelatedVideoType.NOTE, id);
         noteRepository.delete(note);
         pdfIndexService.removeIndexAsync(PdfIndexService.CAT_NOTES, id);
+    }
+
+    /**
+     * Videos for one note, guarded by the same access/program checks as
+     * {@link #getVisible(Long)} so a paid note's lectures cannot be read by id
+     * without bundle access.
+     */
+    @Transactional(readOnly = true)
+    public List<VideoLinkResponse> listVisibleVideos(Long id) {
+        User user = currentUserService.requireUser();
+        Note note = require(id);
+        if (!canAccess(note, user) || !canSeeProgram(note, user)) {
+            throw new ResourceNotFoundException("Note", id);
+        }
+        return relatedVideoService.list(RelatedVideoType.NOTE, id);
+    }
+
+    /** Owner stamp for a video link: the uploader being created for, else the caller. */
+    private Long videoUploaderId(Long ownerId) {
+        return ownerId != null ? ownerId : currentUploaderId();
+    }
+
+    private Long currentUploaderId() {
+        AuthenticatedUser principal = currentUserService.principal();
+        return principal == null ? null : principal.id();
     }
 
     /** Keeps the smart-search index in sync after every write. */
@@ -250,7 +284,8 @@ public class NoteService {
                 note.getCourseBundle() == null ? null : note.getCourseBundle().getTitle(),
                 null,
                 null,
-                note.getCreatedAt());
+                note.getCreatedAt(),
+                0);
     }
 
     /**
@@ -278,7 +313,8 @@ public class NoteService {
                 base.courseId(), base.courseTitle(),
                 null,
                 null,
-                base.createdAt());
+                base.createdAt(),
+                base.videoCount());
     }
 
     /**
@@ -298,6 +334,21 @@ public class NoteService {
             throw new ResourceNotFoundException("Note file", id);
         }
         return note.getFileUrl();
+    }
+
+    /**
+     * Stamp the related-video count used by the list cards' "Related Videos"
+     * button. One grouped query for the whole page - the video rows themselves
+     * are fetched on demand when the button is clicked.
+     */
+    private List<NoteResponse> withVideoCounts(List<NoteResponse> notes) {
+        if (notes.isEmpty()) {
+            return notes;
+        }
+        Map<Long, Integer> counts = relatedVideoService.counts(RelatedVideoType.NOTE);
+        return notes.stream()
+                .map(note -> note.withVideoCount(counts.getOrDefault(note.id(), 0)))
+                .toList();
     }
 
     /** Admin-list enrichment: resolves every uploader in one batched query (no N+1). */
@@ -320,7 +371,8 @@ public class NoteService {
                             base.id(), base.title(), base.subject(), base.course(),
                             base.branch(), base.year(), base.semester(), base.description(),
                             base.fileUrl(), base.storagePath(), base.courseId(), base.courseTitle(),
-                            owner.getName(), owner.getRole().name(), base.createdAt());
+                            owner.getName(), owner.getRole().name(), base.createdAt(),
+                            base.videoCount());
                 })
                 .toList();
     }

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Request/response payloads for the content collections:
@@ -18,6 +19,29 @@ import java.time.LocalDateTime;
 public final class ContentDtos {
 
     private ContentDtos() {
+    }
+
+    // --------------------------------------------------------- related videos
+
+    /**
+     * One YouTube lecture attached to a Notes or TNP record. Both fields are
+     * validated again server-side; a blank row (no title and no URL) is
+     * ignored by the service so the add-link form can keep an empty row.
+     */
+    public record VideoLinkRequest(
+            @Size(max = 200) String videoTitle,
+
+            @Size(max = 600) String youtubeUrl) {
+    }
+
+    public record VideoLinkResponse(
+            Long id,
+            Long noteOrTnpId,
+            String videoTitle,
+            String youtubeUrl,
+            Long uploadedBy,
+            int sortOrder,
+            LocalDateTime createdAt) {
     }
 
     // ---------------------------------------------------------------- notes
@@ -49,7 +73,10 @@ public final class ContentDtos {
             /** Cloudinary public id - kept so the asset can be deleted later. */
             @Size(max = 300) String storagePath,
 
-            Long courseId) {
+            Long courseId,
+
+            /** Optional ordered YouTube lectures (null on a partial update = keep). */
+            List<VideoLinkRequest> videos) {
     }
 
     public record NoteResponse(
@@ -71,7 +98,17 @@ public final class ContentDtos {
             /** Uploader role (ADMIN/FACULTY) - populated only for the admin list. */
             @JsonInclude(JsonInclude.Include.NON_NULL)
             String createdByRole,
-            LocalDateTime createdAt) {
+            LocalDateTime createdAt,
+            /** Number of related YouTube lectures (0 when none). */
+            int videoCount) {
+
+        /** Copy with the related-video count resolved for a list response. */
+        public NoteResponse withVideoCount(int count) {
+            return new NoteResponse(
+                    id, title, subject, course, branch, year, semester,
+                    description, fileUrl, storagePath, courseId, courseTitle,
+                    createdByName, createdByRole, createdAt, count);
+        }
     }
 
     // ------------------------------------------------------------------ PYQ
@@ -141,7 +178,10 @@ public final class ContentDtos {
 
             @Size(max = 300) String storagePath,
 
-            Long courseId) {
+            Long courseId,
+
+            /** Optional ordered YouTube lectures (null on a partial update = keep). */
+            List<VideoLinkRequest> videos) {
     }
 
     public record TnpNoteResponse(
@@ -153,7 +193,16 @@ public final class ContentDtos {
             String storagePath,
             Long courseId,
             String courseTitle,
-            LocalDateTime createdAt) {
+            LocalDateTime createdAt,
+            /** Number of related YouTube lectures (0 when none). */
+            int videoCount) {
+
+        /** Copy with the related-video count resolved for a list response. */
+        public TnpNoteResponse withVideoCount(int count) {
+            return new TnpNoteResponse(
+                    id, title, topic, description, fileUrl, storagePath,
+                    courseId, courseTitle, createdAt, count);
+        }
     }
 
     // ------------------------------------------------------------- timetables

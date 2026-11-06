@@ -19,8 +19,15 @@ import {
     normalizeNote,
     normalizePyq,
     normalizeTnp,
-    normalizeTimetable
+    normalizeTimetable,
+    getRelatedVideos
 } from "./api.js";
+
+import {
+    collectVideos,
+    resetVideos,
+    setVideos
+} from "./videos.js";
 
 import {
     notes,
@@ -248,6 +255,10 @@ export async function uploadNotes(event) {
             );
         }
 
+        // Validate every YouTube link before touching Cloudinary so a
+        // bad link never leaves an orphaned upload behind.
+        const videos = collectVideos("noteVideos");
+
 
         // -------------------------------------------------
         // Upload PDF to Cloudinary
@@ -299,7 +310,10 @@ export async function uploadNotes(event) {
                     file_url: fileUrl,
 
                     // Cloudinary public ID
-                    storage_path: publicId
+                    storage_path: publicId,
+
+                    // Optional ordered YouTube lectures
+                    videos
                 })
             );
 
@@ -313,6 +327,8 @@ export async function uploadNotes(event) {
             notifyContentUpload("notes", getValue("noteTitle"));
 
             event?.target?.reset();
+
+            resetVideos("noteVideos");
 
             dispatchRefresh();
 
@@ -400,6 +416,10 @@ export async function uploadTnp(event) {
         }
 
 
+        // Validate every YouTube link before upload.
+        const videos = collectVideos("tnpVideos");
+
+
         // -------------------------------------------------
         // Upload to Cloudinary
         // -------------------------------------------------
@@ -444,7 +464,10 @@ export async function uploadTnp(event) {
                     file_url: fileUrl,
 
                     // Save Cloudinary public ID
-                    storage_path: publicId
+                    storage_path: publicId,
+
+                    // Optional ordered YouTube lectures
+                    videos
                 })
             );
 
@@ -458,6 +481,8 @@ export async function uploadTnp(event) {
             notifyContentUpload("tnp", getValue("tnpTitle"));
 
             event?.target?.reset();
+
+            resetVideos("tnpVideos");
 
             dispatchRefresh();
 
@@ -949,7 +974,11 @@ async function editNotes(
 
         semester:
             values.semester ??
-            record.semester
+            record.semester,
+
+        // undefined = keep the current videos untouched.
+        videos:
+            values.videos
     };
 
     const data = await apiPut(
@@ -990,7 +1019,11 @@ async function editTnp(
 
         title:
             values.title ??
-            record.title
+            record.title,
+
+        // undefined = keep the current videos untouched.
+        videos:
+            values.videos
     };
 
     const data = await apiPut(
@@ -1697,6 +1730,9 @@ function populateEditModal(
     const isTimetable =
         category === "timetable";
 
+    const isVideoCategory =
+        isNotes || isTnp;
+
 
     // =====================================================
     // Make sure SELECT has the current value as an option
@@ -1910,13 +1946,47 @@ if (isTimetable) {
         "editResourceExamType",
         isTimetable
     );
+
+
+    // =====================================================
+    // Related videos (notes / tnp only)
+    // =====================================================
+
+    showEditField(
+        "editResourceVideos",
+        isVideoCategory
+    );
+
+    const videoManager =
+        $("editResourceVideos");
+
+    if (videoManager) {
+
+        if (isVideoCategory && record.videos !== null) {
+
+            videoManager.dataset.videoUnavailable = "false";
+
+            setVideos(
+                videoManager,
+                record.videos || []
+            );
+        } else {
+
+            // A failed fetch (null) must not clear the saved
+            // links when the user saves other fields.
+            videoManager.dataset.videoUnavailable =
+                isVideoCategory ? "true" : "false";
+
+            setVideos(videoManager, []);
+        }
+    }
 }
 
 // =====================================================
 // Open Edit Dialog
 // =====================================================
 
-export function openEditDialog(
+export async function openEditDialog(
     category,
     id
 ) {
@@ -1941,13 +2011,36 @@ export function openEditDialog(
     }
 
 
+    // Related video links are loaded lazily, only when the edit form
+    // for a Notes/TNP record opens. Other categories never fetch them.
+    let videos = record.videos;
+
+    if (category === "notes" || category === "tnp") {
+        try {
+            videos = await getRelatedVideos(category, record.id);
+        } catch (error) {
+            console.warn(
+                "Could not load related videos:",
+                error
+            );
+
+            // null tells the modal "unknown", so a save never wipes the
+            // stored videos because of a failed fetch.
+            videos = null;
+        }
+    }
+
+
     window.dispatchEvent(
         new CustomEvent(
             "campusnotes:open-edit",
             {
                 detail: {
                     category,
-                    record
+                    record: {
+                        ...record,
+                        videos
+                    }
                 }
             }
         )

@@ -465,7 +465,46 @@ function actionButtons(
 
 // =====================================================
 
+// Notes and TNP records can carry related YouTube lectures.
+const VIDEO_CATEGORIES = new Set(["notes", "tnp"]);
 
+/**
+ * "Videos" pill shown on the title row next to the favourite heart.
+ * Only rendered when the list payload reports at least one attached
+ * video - the video rows themselves are fetched when the pill is clicked.
+ */
+function relatedVideosButtonHtml(category, item, locked = false) {
+    if (locked || !item || !item.id || !VIDEO_CATEGORIES.has(category)) {
+        return "";
+    }
+
+    const count = Number(item.video_count || 0);
+
+    if (!Number.isFinite(count) || count < 1) {
+        return "";
+    }
+
+    const title = item.title || item.subject || "this document";
+
+    return `
+        <button
+            type="button"
+            class="related-videos-btn shrink-0 inline-flex h-9 items-center
+                   justify-center gap-1.5 rounded-full bg-red-50 px-2.5
+                   text-xs font-semibold text-red-600 transition
+                   hover:bg-red-100 sm:px-3"
+            data-related-videos
+            data-related-category="${escapeHtml(String(category))}"
+            data-related-id="${escapeHtml(String(item.id))}"
+            data-related-title="${escapeHtml(String(title))}"
+            aria-label="Related videos"
+            title="Related videos"
+        >
+            <i class="fa-brands fa-youtube text-sm"></i>
+            <span class="hidden sm:inline">Videos</span>
+        </button>
+    `;
+}
 
 function card({
     icon = "fa-file-pdf",
@@ -512,7 +551,8 @@ function card({
                             </h3>
                         </div>
 
-                        <div class="flex items-center gap-2 shrink-0">
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            ${relatedVideosButtonHtml(category, item, locked)}
                             ${favoriteButtonHtml(category, item ? item.id : "", title)}
                         </div>
                     </div>
