@@ -203,10 +203,177 @@ async function updateNavForSession() {
     }
 }
 
+// =====================================================
+// Homepage contact popup (footer "Contact Us")
+// =====================================================
+
+const CONTACT_EMAIL = "abhishekbabu7275@gmail.com";
+
+/**
+ * Copy text with the async Clipboard API, falling back to the
+ * legacy execCommand path for older browsers / insecure origins.
+ */
+async function copyToClipboard(text) {
+    try {
+        if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+            return true;
+        }
+    } catch {
+        // Fall through to the legacy path.
+    }
+
+    try {
+        const area = document.createElement("textarea");
+
+        area.value = text;
+        area.setAttribute("readonly", "");
+        area.style.position = "fixed";
+        area.style.top = "-1000px";
+        area.style.opacity = "0";
+
+        document.body.appendChild(area);
+        area.select();
+        area.setSelectionRange(0, text.length);
+
+        const copied = document.execCommand("copy");
+
+        area.remove();
+        return copied;
+    } catch {
+        return false;
+    }
+}
+
+function initContactPopup() {
+    const trigger = document.getElementById("contactUsBtn");
+    const popup = document.getElementById("contactUsPopup");
+
+    if (!trigger || !popup) {
+        return;
+    }
+
+    const closeButton = document.getElementById("closeContactUsBtn");
+    const copyButton = document.getElementById("copyContactEmailBtn");
+    const copyLabel = copyButton?.querySelector("[data-copy-label]");
+    const emailLink = document.getElementById("contactEmailLink");
+    const status = document.getElementById("contactCopyStatus");
+    const caret = trigger.querySelector("[data-contact-caret]");
+
+    let copyTimer = null;
+
+    const isOpen = () => popup.classList.contains("is-open");
+
+    const resetCopyFeedback = () => {
+        if (copyTimer) {
+            window.clearTimeout(copyTimer);
+            copyTimer = null;
+        }
+
+        if (copyLabel) {
+            copyLabel.textContent = "Copy Email";
+        }
+
+        if (status) {
+            status.textContent = "";
+            status.classList.remove("text-red-500");
+            status.classList.add("text-emerald-600");
+        }
+    };
+
+    const setOpen = open => {
+        popup.classList.toggle("is-open", open);
+        popup.setAttribute("aria-hidden", String(!open));
+        trigger.setAttribute("aria-expanded", String(open));
+
+        if (caret) {
+            caret.style.transform = open ? "rotate(180deg)" : "";
+        }
+
+        if (!open) {
+            resetCopyFeedback();
+        }
+    };
+
+    trigger.addEventListener("click", event => {
+        event.stopPropagation();
+        setOpen(!isOpen());
+    });
+
+    closeButton?.addEventListener("click", () => {
+        setOpen(false);
+        trigger.focus();
+    });
+
+    // Opening the mail app closes the popup behind it.
+    emailLink?.addEventListener("click", () => setOpen(false));
+
+    // Clicking anywhere outside the popup closes it.
+    document.addEventListener("click", event => {
+        if (!isOpen()) {
+            return;
+        }
+
+        if (popup.contains(event.target) || trigger.contains(event.target)) {
+            return;
+        }
+
+        setOpen(false);
+    });
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && isOpen()) {
+            setOpen(false);
+            trigger.focus();
+        }
+    });
+
+    copyButton?.addEventListener("click", async () => {
+        const copied = await copyToClipboard(CONTACT_EMAIL);
+
+        if (!copied) {
+            if (status) {
+                status.textContent = "Couldn't copy — select the email instead.";
+                status.classList.remove("text-emerald-600");
+                status.classList.add("text-red-500");
+            }
+
+            return;
+        }
+
+        if (copyLabel) {
+            copyLabel.textContent = "Copied!";
+        }
+
+        if (status) {
+            status.textContent = "Email copied!";
+            status.classList.remove("text-red-500");
+            status.classList.add("text-emerald-600");
+        }
+
+        if (copyTimer) {
+            window.clearTimeout(copyTimer);
+        }
+
+        copyTimer = window.setTimeout(() => {
+            if (copyLabel) {
+                copyLabel.textContent = "Copy Email";
+            }
+
+            if (status) {
+                status.textContent = "";
+            }
+
+            copyTimer = null;
+        }, 2200);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     updateNavForSession();
     renderOverallRating();
     renderCourseCatalog();
+    initContactPopup();
 
     // Viewing or buying a course requires an account:
     // guests are redirected to the login page.

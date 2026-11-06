@@ -435,6 +435,69 @@
         }
 
         /* =====================================================
+   HOMEPAGE CONTACT POPUP
+====================================================== */
+
+        .contact-popup {
+            width: min(18rem, calc(100vw - 2rem));
+
+            transform-origin: bottom left;
+            transform: translateY(6px) scale(.97);
+            opacity: 0;
+            visibility: hidden;
+
+            transition:
+                opacity .18s ease,
+                transform .18s ease,
+                visibility .18s ease;
+        }
+
+        .contact-popup.is-open {
+            opacity: 1;
+            visibility: visible;
+
+            transform: translateY(0) scale(1);
+        }
+
+        @media (min-width: 640px) {
+            .contact-popup {
+                transform-origin: bottom right;
+            }
+        }
+
+        /* Short viewports (phone/tablet landscape): anchor the popup to
+           the viewport so it can never open above the visible area. */
+        @media (max-height: 540px) {
+            #contactUsPopup.contact-popup {
+                position: fixed;
+                left: 50%;
+                right: auto;
+                top: auto;
+                bottom: 1rem;
+                z-index: 90;
+
+                margin: 0;
+
+                max-height: calc(100vh - 2rem);
+                max-height: calc(100dvh - 2rem);
+                overflow-y: auto;
+
+                transform-origin: bottom center;
+                transform: translate(-50%, 8px) scale(.97);
+            }
+
+            #contactUsPopup.contact-popup.is-open {
+                transform: translate(-50%, 0) scale(1);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .contact-popup {
+                transition-duration: .01ms;
+            }
+        }
+
+        /* =====================================================
    HOW IT WORKS — STEP CONNECTORS (index.html)
 ===================================================== */
 
