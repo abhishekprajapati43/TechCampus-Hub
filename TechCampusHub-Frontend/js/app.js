@@ -18,6 +18,7 @@ import { setupPdfViewer } from "./pdfviewer.js";
 import { setupSmartSearch } from "./smartsearch.js";
 import { setupDashboardCounts } from "./dashboardcounts.js";
 import { initSyllabus } from "./syllabus.js";
+import { initShare } from "./share.js";
 
 const PAGE =
     document.body?.dataset?.page || "auth";
@@ -59,6 +60,12 @@ document.addEventListener(
 
             // Setup all application events first.
             setupEvents();
+
+            // Site-wide share triggers (shared header + mobile drawer).
+            // Delegated, so it also covers chrome injected after load.
+            if (PAGE !== "auth") {
+                initShare();
+            }
 
             // Then initialize authentication,
             // profile and dashboard.

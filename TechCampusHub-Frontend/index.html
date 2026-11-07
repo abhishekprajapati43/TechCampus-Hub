@@ -73,6 +73,23 @@
                 </nav>
                 <div class="flex items-center gap-2 sm:gap-3 shrink-0">
 
+                    <!-- Share the website (native sheet on mobile,
+                         themed popup on desktop) -->
+                    <button type="button"
+                            data-share-trigger
+                            aria-haspopup="dialog"
+                            aria-expanded="false"
+                            aria-label="Share TechCampus Hub"
+                            title="Share TechCampus Hub"
+                            class="flex h-9 w-9 sm:h-10 sm:w-auto shrink-0 items-center justify-center
+                                   gap-2 rounded-xl border border-slate-200 bg-white px-0 sm:px-3.5
+                                   text-xs sm:text-sm font-bold text-slate-600
+                                   hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700
+                                   transition">
+                        <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
+                        <span class="hidden sm:inline">Share</span>
+                    </button>
+
                     <!-- Guest actions (Get started only - the header
                          Login link was removed; login stays reachable
                          through the button itself) -->

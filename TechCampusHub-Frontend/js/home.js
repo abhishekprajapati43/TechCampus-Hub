@@ -10,6 +10,7 @@ import { getSession } from "./auth.js";
 import { loadCourses, formatPrice, ratingBadgeHtml } from "./courses.js";
 import { getOverallRating } from "./api.js";
 import { escapeHtml } from "./helpers.js";
+import { initShare } from "./share.js";
 
 /**
  * Platform-wide average rating shown above the homepage catalog,
@@ -374,6 +375,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderOverallRating();
     renderCourseCatalog();
     initContactPopup();
+    initShare();
 
     // Viewing or buying a course requires an account:
     // guests are redirected to the login page.

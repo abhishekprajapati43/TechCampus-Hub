@@ -63,7 +63,24 @@
                         </div>
                         <!-- RIGHT HEADER PROFILE (students + faculty; hidden for
                              administrators so admin pages stay unchanged) -->
-                        <div id="headerProfileMenu" class="hidden relative shrink-0">
+                        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                            <!-- Share the website: native sheet on mobile,
+                                 themed popup on desktop/laptop. -->
+                            <button type="button"
+                                    data-share-trigger
+                                    aria-haspopup="dialog"
+                                    aria-expanded="false"
+                                    aria-label="Share TechCampus Hub"
+                                    title="Share TechCampus Hub"
+                                    class="flex h-10 w-10 lg:w-auto shrink-0 items-center
+                                           justify-center gap-2 rounded-xl border border-slate-200
+                                           bg-white px-0 lg:px-3.5 text-sm font-bold text-slate-600
+                                           hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700
+                                           transition">
+                                <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
+                                <span class="hidden lg:inline">Share</span>
+                            </button>
+                            <div id="headerProfileMenu" class="hidden relative shrink-0">
                             <button id="headerProfileBtn" type="button"
                                     aria-haspopup="true" aria-expanded="false"
                                     class="flex items-center gap-2 sm:gap-3 rounded-xl pl-1 pr-1 sm:pr-3 py-1
@@ -104,5 +121,6 @@
                                     <i class="fa-solid fa-right-from-bracket w-4"></i> Logout
                                 </button>
                             </div>
+                        </div>
                         </div>
                     </header>
