@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>About Us | TechCampus_Hub</title>
+        <meta name="description" content="About TechCampus_Hub - a college learning portal for BCA, MCA and B.Tech students with study notes, PYQ papers, TNP resources, syllabus and exam timetables.">
+        <meta name="theme-color" content="#102a56">
+        <link rel="icon" type="image/png" href="./assets/logo.png">
+        <link rel="apple-touch-icon" href="./assets/logo.png">
+        <!-- =====================================================
+         TAILWIND CSS
+    ====================================================== -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- =====================================================
+         FONT AWESOME
+    ====================================================== -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+        <!-- =====================================================
+         TAILWIND CONFIG
+    ====================================================== -->
+        <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: "#102a56",
+                        bluehub: "#2563eb",
+                        softbg: "#f5f8fc"
+                    },
+
+                    boxShadow: {
+                        soft: "0 8px 28px rgba(15,39,74,.08)"
+                    }
+                }
+            }
+        };
+        </script>
+        <!-- =====================================================
+         CUSTOM CSS
+    ====================================================== -->
+        <link rel="stylesheet" href="style.css">
+    </head>
+<body data-page="about">
+        <!-- =====================================================
+         SITE HEADER
+    ====================================================== -->
+        <header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
+            <div class="max-w-6xl mx-auto px-4 sm:px-5 h-20 flex items-center justify-between gap-3 sm:gap-4">
+                <a href="./index.html" class="flex items-center gap-2 sm:gap-3 min-w-0">
+                    <div class="text-logo-icon shrink-0">
+                        <img src="./assets/logo.png" alt="TechCampus Hub logo">
+                    </div>
+                    <div class="min-w-0">
+                        <p class="font-extrabold text-base sm:text-lg leading-tight truncate">
+                            TechCampus_Hub
+                        </p>
+                        <p class="hidden sm:block text-xs text-slate-500 leading-tight truncate">
+                            College Learning Portal
+                        </p>
+                    </div>
+                </a>
+                <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+                    <a href="./index.html#courses" class="hover:text-blue-600 transition">
+                        Courses
+                    </a>
+                    <a href="./index.html#how" class="hover:text-blue-600 transition">
+                        How it works
+                    </a>
+                    <a href="./index.html#features" class="hover:text-blue-600 transition">
+                        Resources
+                    </a>
+                </nav>
+                <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+
+                    <!-- Share the website (native sheet on mobile,
+                         themed popup on desktop) -->
+                    <button type="button"
+                            data-share-trigger
+                            aria-haspopup="dialog"
+                            aria-expanded="false"
+                            aria-label="Share TechCampus Hub"
+                            title="Share TechCampus Hub"
+                            class="flex h-9 w-9 sm:h-10 sm:w-auto shrink-0 items-center justify-center
+                                   gap-2 rounded-xl border border-slate-200 bg-white px-0 sm:px-3.5
+                                   text-xs sm:text-sm font-bold text-slate-600
+                                   hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700
+                                   transition">
+                        <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
+                        <span class="hidden sm:inline">Share</span>
+                    </button>
+
+                    <!-- Guest actions -->
+                    <div id="guestNavActions" class="flex items-center gap-3">
+                        <a href="./login.html" class="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold px-3 sm:px-5 py-2 sm:py-2.5 whitespace-nowrap transition">
+                            Get started
+                        </a>
+                    </div>
+
+                    <!-- Signed-in actions -->
+                    <div id="memberNavActions" class="hidden items-center gap-3">
+                        <a href="./courses.html" class="hidden sm:inline text-sm font-bold text-slate-600 hover:text-blue-600 transition">
+                            My Courses
+                        </a>
+                        <a href="./dashboard.html" class="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold px-3 sm:px-5 py-2 sm:py-2.5 whitespace-nowrap transition">
+                            Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- =====================================================
+             PAGE HERO
+        ====================================================== -->
+            <section class="bg-softbg border-b border-slate-200">
+                <div class="max-w-6xl mx-auto px-5 py-14 md:py-20 text-center">
+                    <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-2xl text-blue-600"
+                          aria-hidden="true">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </span>
+                    <p class="mt-5 text-xs font-extrabold uppercase tracking-widest text-blue-600">
+                        Company
+                    </p>
+                    <h1 class="mt-2 text-3xl md:text-4xl font-extrabold text-slate-900">
+                        About TechCampus_Hub
+                    </h1>
+                    <p class="mt-3 mx-auto max-w-2xl text-sm leading-6 md:text-base text-slate-500">
+                        A college learning portal built for BCA, MCA and B.Tech students —
+                        notes, previous year papers, TNP resources and exam timetables in
+                        one place.
+                    </p>
+                </div>
+            </section>
+
+            <!-- =====================================================
+             INTRODUCTION
+        ====================================================== -->
+            <section id="introduction" class="max-w-6xl mx-auto px-5 py-12 md:py-16 scroll-mt-28">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                    <div class="lg:col-span-2">
+                        <p class="text-xs font-extrabold uppercase tracking-widest text-blue-600">
+                            Introduction
+                        </p>
+                        <h2 class="mt-2 text-2xl font-extrabold text-slate-900">
+                            What is TechCampus_Hub?
+                        </h2>
+                        <div class="mt-4 space-y-4 text-sm leading-7 text-slate-600 md:text-base">
+                            <p>
+                                TechCampus_Hub is a college learning portal that gathers the
+                                material students actually need during the semester: subject-wise
+                                <strong>study notes</strong>, <strong>previous year question
+                                papers</strong>, <strong>TNP resources</strong>, the
+                                <strong>syllabus</strong> and <strong>exam timetables</strong> —
+                                organised by course, branch, year and semester.
+                            </p>
+                            <p>
+                                Everything lives behind one simple account. Visitors can preview
+                                the latest uploads on the homepage; signed-in students open them
+                                in a secure in-browser PDF viewer, and a one-time UPI payment
+                                unlocks every note inside a course bundle.
+                            </p>
+                            <p>
+                                The portal is intentionally lightweight: no apps to install, no
+                                clutter — open the site, pick your course, and start reading.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400">
+                            At a glance
+                        </p>
+                        <ul class="mt-4 space-y-3 text-sm text-slate-600">
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check mt-0.5 text-blue-600" aria-hidden="true"></i>
+                                Notes, PYQs, TNP, syllabus &amp; timetables
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check mt-0.5 text-blue-600" aria-hidden="true"></i>
+                                BCA, MCA and B.Tech courses
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check mt-0.5 text-blue-600" aria-hidden="true"></i>
+                                Secure in-browser PDF viewer
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check mt-0.5 text-blue-600" aria-hidden="true"></i>
+                                One-time UPI bundle unlock
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check mt-0.5 text-blue-600" aria-hidden="true"></i>
+                                Built mobile-first for every screen
+                            </li>
+                        </ul>
+                        <a href="./help-center.html"
+                           class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 font-bold text-blue-700 transition hover:bg-blue-100">
+                            <i class="fa-solid fa-life-ring" aria-hidden="true"></i>
+                            Visit Help Center
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =====================================================
+             MISSION & VISION
+        ====================================================== -->
+            <section class="bg-softbg border-y border-slate-200">
+                <div class="max-w-6xl mx-auto px-5 py-12 md:py-16 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="card p-6 sm:p-8">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </span>
+                        <h2 class="mt-4 text-xl font-extrabold text-slate-900">Our Mission</h2>
+                        <p class="mt-3 text-sm leading-7 text-slate-600">
+                            To make quality study material easy to find and easy to read for
+                            every college student — organised by course and semester, available
+                            on any device, and priced so that a single bundle opens an entire
+                            subject instead of charging for each file.
+                        </p>
+                    </div>
+
+                    <div class="card p-6 sm:p-8">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-500 text-white"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-eye"></i>
+                        </span>
+                        <h2 class="mt-4 text-xl font-extrabold text-slate-900">Our Vision</h2>
+                        <p class="mt-3 text-sm leading-7 text-slate-600">
+                            To become the go-to learning companion for BCA, MCA and B.Tech
+                            students — a portal where notes, papers, TNP resources and exam
+                            updates are always current, trustworthy and one tap away, so
+                            students spend their time learning instead of hunting for files.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =====================================================
+             FEATURES
+        ====================================================== -->
+            <section id="features" class="max-w-6xl mx-auto px-5 py-12 md:py-16 scroll-mt-28">
+                <div class="text-center max-w-2xl mx-auto">
+                    <p class="text-xs font-extrabold uppercase tracking-widest text-blue-600">
+                        Features
+                    </p>
+                    <h2 class="mt-2 text-2xl md:text-3xl font-extrabold text-slate-900">
+                        Everything the portal offers
+                    </h2>
+                </div>
+
+                <div class="mt-8 grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <div class="card p-6">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-book-open"></i>
+                        </span>
+                        <h3 class="mt-4 font-extrabold text-slate-900">Subject-wise Notes</h3>
+                        <p class="mt-2 text-sm leading-6 text-slate-500">
+                            Semester and subject-wise notes for every supported course,
+                            uploaded and reviewed by the admin.
+                        </p>
+                    </div>
+
+                    <div class="card p-6">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-file-lines"></i>
+                        </span>
+                        <h3 class="mt-4 font-extrabold text-slate-900">Previous Year Papers</h3>
+                        <p class="mt-2 text-sm leading-6 text-slate-500">
+                            PYQ papers organised by course, semester and subject so exam
+                            revision follows a pattern instead of guesswork.
+                        </p>
+                    </div>
+
+                    <div class="card p-6">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 text-violet-600"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-clipboard-list"></i>
+                        </span>
+                        <h3 class="mt-4 font-extrabold text-slate-900">TNP Resources</h3>
+                        <p class="mt-2 text-sm leading-6 text-slate-500">
+                            TNP material kept in the same library as notes and papers — one
+                            search, one place for everything.
+                        </p>
+                    </div>
+
+                    <div class="card p-6">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-calendar-days"></i>
+                        </span>
+                        <h3 class="mt-4 font-extrabold text-slate-900">Syllabus &amp; Timetables</h3>
+                        <p class="mt-2 text-sm leading-6 text-slate-500">
+                            The full syllabus and exam timetables, so you always know what is
+                            coming and when.
+                        </p>
+                    </div>
+
+                    <div class="card p-6">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-rose-600"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-magnifying-glass-plus"></i>
+                        </span>
+                        <h3 class="mt-4 font-extrabold text-slate-900">Secure PDF Viewer</h3>
+                        <p class="mt-2 text-sm leading-6 text-slate-500">
+                            Notes open inside the site in a built-in viewer with page and
+                            zoom controls — no downloads, no extra apps.
+                        </p>
+                    </div>
+
+                    <div class="card p-6">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-50 text-sky-600"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                        </span>
+                        <h3 class="mt-4 font-extrabold text-slate-900">One-time UPI Unlock</h3>
+                        <p class="mt-2 text-sm leading-6 text-slate-500">
+                            Buy a bundle once with any UPI app and every note inside it opens
+                            for your account — no subscriptions.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =====================================================
+             SUPPORTED COURSES
+        ====================================================== -->
+            <section id="courses" class="bg-softbg border-y border-slate-200">
+                <div class="max-w-6xl mx-auto px-5 py-12 md:py-16">
+                    <div class="text-center max-w-2xl mx-auto">
+                        <p class="text-xs font-extrabold uppercase tracking-widest text-blue-600">
+                            Supported Courses
+                        </p>
+                        <h2 class="mt-2 text-2xl md:text-3xl font-extrabold text-slate-900">
+                            Built for your programme
+                        </h2>
+                        <p class="mt-3 text-sm leading-6 text-slate-500">
+                            Course bundles cover every semester, with notes, PYQs, TNP
+                            resources, syllabus and timetables inside.
+                        </p>
+                    </div>
+
+                    <div class="mt-8 grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-3 gap-5">
+                        <div class="card p-6 text-center">
+                            <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-lg text-white"
+                                  aria-hidden="true">
+                                <i class="fa-solid fa-laptop-code"></i>
+                            </span>
+                            <h3 class="mt-4 text-lg font-extrabold text-slate-900">BCA</h3>
+                            <p class="mt-2 text-sm leading-6 text-slate-500">
+                                Bachelor of Computer Applications — programming, DBMS, web
+                                development and semester exam preparation.
+                            </p>
+                        </div>
+
+                        <div class="card p-6 text-center">
+                            <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-500 text-lg text-white"
+                                  aria-hidden="true">
+                                <i class="fa-solid fa-database"></i>
+                            </span>
+                            <h3 class="mt-4 text-lg font-extrabold text-slate-900">MCA</h3>
+                            <p class="mt-2 text-sm leading-6 text-slate-500">
+                                Master of Computer Applications — advanced systems, software
+                                engineering and research-oriented study material.
+                            </p>
+                        </div>
+
+                        <div class="card p-6 text-center">
+                            <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500 text-lg text-white"
+                                  aria-hidden="true">
+                                <i class="fa-solid fa-gears"></i>
+                            </span>
+                            <h3 class="mt-4 text-lg font-extrabold text-slate-900">B.Tech</h3>
+                            <p class="mt-2 text-sm leading-6 text-slate-500">
+                                Bachelor of Technology — branch-wise notes, previous year
+                                papers and lab/exam essentials across semesters.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =====================================================
+             DEVELOPER INFORMATION
+        ====================================================== -->
+            <section id="developer" class="max-w-6xl mx-auto px-5 py-12 md:py-16 scroll-mt-28">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                    <div class="lg:col-span-2">
+                        <p class="text-xs font-extrabold uppercase tracking-widest text-blue-600">
+                            Developer Information
+                        </p>
+                        <h2 class="mt-2 text-2xl font-extrabold text-slate-900">
+                            Who built TechCampus_Hub
+                        </h2>
+                        <div class="mt-4 space-y-4 text-sm leading-7 text-slate-600 md:text-base">
+                            <p>
+                                TechCampus_Hub is designed, developed and maintained by
+                                <strong>Abhishek Prajapati</strong> — from the student-facing pages
+                                and the secure PDF viewer to the payment flow and the admin
+                                panel that reviews every payment.
+                            </p>
+                            <p>
+                                The platform is built as a modern web application: a responsive
+                                front end served straight to your browser and a REST backend
+                                that keeps accounts, courses and files behind login-protected
+                                endpoints.
+                            </p>
+                            <p>
+                                Feedback and feature requests are welcome — the Help Center
+                                explains how to reach out.
+                            </p>
+                        </div>
+
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <a href="./help-center.html"
+                               class="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-bold text-white transition hover:bg-blue-700">
+                                <i class="fa-solid fa-life-ring" aria-hidden="true"></i>
+                                Help Center
+                            </a>
+                            <a href="./index.html"
+                               class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 font-bold text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700">
+                                <i class="fa-solid fa-house" aria-hidden="true"></i>
+                                Back to Home
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-xl text-blue-600"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-user-gear"></i>
+                        </span>
+                        <p class="mt-4 font-extrabold text-slate-900">Abhishek Prajapati</p>
+                        <p class="text-sm text-slate-500">Developer &amp; Maintainer</p>
+                        <p class="mt-3 text-xs leading-5 text-slate-400">
+                            Front end · Backend · Payments · Admin tooling
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =====================================================
+             CONTACT
+        ====================================================== -->
+            <section id="contact" class="bg-softbg border-t border-slate-200">
+                <div class="max-w-3xl mx-auto px-5 py-12 md:py-16 text-center">
+                    <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-xl text-blue-600 shadow-soft"
+                          aria-hidden="true">
+                        <i class="fa-solid fa-envelope"></i>
+                    </span>
+                    <h2 class="mt-4 text-2xl font-extrabold text-slate-900">Contact Us</h2>
+                    <p class="mt-3 text-sm leading-6 text-slate-500">
+                        Questions about the portal, a payment or your account? Write to us —
+                        we usually reply within a day.
+                    </p>
+
+                    <!-- Clicking the address only copies it - it never
+                         opens Gmail or the default mail app. -->
+                    <button type="button"
+                            data-copy-email
+                            class="mt-5 inline-flex max-w-full items-center gap-2 rounded-xl
+                                   border border-slate-200 bg-white px-4 py-3 text-left
+                                   break-words cursor-pointer text-sm font-bold text-blue-700
+                                   transition-colors hover:bg-blue-50 sm:text-base shadow-soft"
+                            title="Copy email address">
+                        <i class="fa-solid fa-envelope shrink-0" aria-hidden="true"></i>
+                        <span>techcampushub2026<wbr>@gmail.com</span>
+                        <i class="fa-regular fa-copy shrink-0 text-xs opacity-60" aria-hidden="true"></i>
+                    </button>
+                    <p class="mt-3 text-xs font-semibold text-slate-400">
+                        Click to copy — nothing else opens.
+                    </p>
+                </div>
+            </section>
+        </main>
+
+        <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+        <footer class="border-t border-slate-200 bg-white">
+            <div class="max-w-6xl mx-auto px-5 py-7 lg:py-8 grid grid-cols-1 min-[560px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-[1.2fr_1fr_1.5fr_1.05fr_1.1fr] gap-x-6 gap-y-7">
+                <div>
+                    <p class="font-extrabold">TechCampus_Hub</p>
+                    <p class="text-xs text-slate-500">College Learning Portal</p>
+                    <p class="mt-3 text-sm text-slate-500">
+                        Notes, TNP resources, PYQ papers and exam timetables
+                        for MCA, B.Tech &amp; BCA students.
+                    </p>
+                </div>
+                <div>
+                    <p class="font-extrabold text-sm uppercase tracking-wide text-slate-400">
+                        Portal
+                    </p>
+                    <ul class="mt-3 space-y-1.5 text-sm text-slate-600">
+                        <li><a href="./index.html#courses" class="hover:text-blue-600 transition">Courses</a></li>
+                        <li><a href="./index.html#how" class="hover:text-blue-600 transition">How it works</a></li>
+                        <li><a href="./login.html" class="hover:text-blue-600 transition">Login / Sign up</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="font-extrabold text-sm uppercase tracking-wide text-slate-400">
+                        Support
+                    </p>
+                    <ul class="mt-3 space-y-1.5 text-sm text-slate-600">
+                        <li><a href="./help-center.html" class="hover:text-blue-600 transition">Help Center</a></li>
+                        <li><a href="./help-center.html#contact-information" class="hover:text-blue-600 transition">Contact Us</a></li>
+                    </ul>
+
+                    <!-- Clicking the address only copies it - it never
+                         opens Gmail or the default mail app. -->
+                    <button type="button"
+                            data-copy-email
+                            class="mt-2.5 inline-flex max-w-full items-center gap-2 text-left
+                                   break-words cursor-pointer rounded-lg px-2 py-1.5
+                                   text-sm font-semibold text-blue-600
+                                   transition-colors hover:bg-blue-50 hover:text-blue-700"
+                            title="Copy email address">
+                        <i class="fa-solid fa-envelope shrink-0" aria-hidden="true"></i>
+                        <span>techcampushub2026<wbr>@gmail.com</span>
+                        <i class="fa-regular fa-copy shrink-0 text-xs opacity-60" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div>
+                    <p class="font-extrabold text-sm uppercase tracking-wide text-slate-400">
+                        Community
+                    </p>
+                    <ul class="mt-3 space-y-1.5 text-sm text-slate-600">
+                        <li>
+                            <a href="https://t.me/TechCampus_Hub" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition">
+                                <i class="fa-brands fa-telegram mr-2"></i>Telegram channel
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="font-extrabold text-sm uppercase tracking-wide text-slate-400">
+                        Company
+                    </p>
+                    <ul class="mt-3 space-y-1.5 text-sm text-slate-600">
+                        <li><a href="./about.html" class="hover:text-blue-600 transition">About Us</a></li>
+                        <li><a href="#" class="hover:text-blue-600 transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-blue-600 transition">Terms &amp; Conditions</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-100 py-4 text-center">
+                <p class="text-xs leading-5 text-slate-400">
+                    © 2026 TechCampus_Hub. All Rights Reserved.
+                </p>
+            </div>
+        </footer>
+
+        <script src="./js/env.js"></script>
+        <script type="module" src="./js/public-page.js"></script>
+    </body>
+</html>

@@ -8,9 +8,10 @@
 
 import { getSession } from "./auth.js";
 import { loadCourses, formatPrice, ratingBadgeHtml } from "./courses.js";
-import { getOverallRating } from "./api.js";
-import { escapeHtml } from "./helpers.js";
+import { getOverallRating, getHomeResources, getAuthToken } from "./api.js";
+import { escapeHtml, formatDate } from "./helpers.js";
 import { initShare } from "./share.js";
+import { openPdfViewer, setupPdfViewer } from "./pdfviewer.js";
 
 /**
  * Platform-wide average rating shown above the homepage catalog,
@@ -184,6 +185,388 @@ async function renderCourseCatalog() {
     }
 }
 
+// =====================================================
+// Homepage study-resource previews
+// =====================================================
+
+const HOME_RESOURCE_SECTIONS = [
+    {
+        key: "notes",
+        gridId: "homeResourceNotes",
+        countId: "homeResourceCountNotes",
+        emptyId: "homeResourceEmptyNotes"
+    },
+    {
+        key: "pyq",
+        gridId: "homeResourcePyq",
+        countId: "homeResourceCountPyq",
+        emptyId: "homeResourceEmptyPyq"
+    },
+    {
+        key: "tnp",
+        gridId: "homeResourceTnp",
+        countId: "homeResourceCountTnp",
+        emptyId: "homeResourceEmptyTnp"
+    },
+    {
+        key: "syllabus",
+        gridId: "homeResourceSyllabus",
+        countId: "homeResourceCountSyllabus",
+        emptyId: "homeResourceEmptySyllabus"
+    }
+];
+
+const HOME_RESOURCE_STYLES = {
+    notes: {
+        icon: "fa-book-open",
+        iconClass: "bg-blue-50 text-blue-600"
+    },
+    pyq: {
+        icon: "fa-file-circle-question",
+        iconClass: "bg-amber-50 text-amber-600"
+    },
+    tnp: {
+        icon: "fa-briefcase",
+        iconClass: "bg-emerald-50 text-emerald-600"
+    },
+    syllabus: {
+        icon: "fa-book",
+        iconClass: "bg-indigo-50 text-indigo-600"
+    }
+};
+
+/** One homepage preview card: basic metadata + a View button. */
+function homeResourceCardHtml(item) {
+    const style = HOME_RESOURCE_STYLES[item.category] || HOME_RESOURCE_STYLES.notes;
+    const title = item.title || "Untitled";
+    const meta = [];
+
+    if (item.course) {
+        meta.push(`
+            <span class="home-resource-meta">
+                <i class="fa-solid fa-graduation-cap text-[10px]" aria-hidden="true"></i>
+                ${escapeHtml(item.course)}
+            </span>
+        `);
+    }
+
+    if (Number(item.semester) > 0) {
+        meta.push(`
+            <span class="home-resource-meta">
+                <i class="fa-regular fa-calendar text-[10px]" aria-hidden="true"></i>
+                Sem ${escapeHtml(item.semester)}
+            </span>
+        `);
+    }
+
+    if (item.subject) {
+        meta.push(`
+            <span class="home-resource-meta">
+                <i class="fa-solid fa-bookmark text-[10px]" aria-hidden="true"></i>
+                ${escapeHtml(item.subject)}
+            </span>
+        `);
+    }
+
+    const description = item.description
+        ? `<p class="mt-2 line-clamp-2 text-xs leading-5 text-slate-500">${escapeHtml(item.description)}</p>`
+        : "";
+
+    const date = item.uploadDate
+        ? `<span class="text-[11px] text-slate-400">
+                <i class="fa-regular fa-calendar mr-1" aria-hidden="true"></i>
+                ${escapeHtml(formatDate(item.uploadDate))}
+           </span>`
+        : "<span></span>";
+
+    const lock = item.locked
+        ? `<span class="inline-flex shrink-0 items-center rounded-lg bg-amber-50 px-2 py-1
+                       text-[10px] font-bold text-amber-700"
+                 title="Included with a course bundle">
+                <i class="fa-solid fa-lock" aria-hidden="true"></i>
+           </span>`
+        : "";
+
+    return `
+        <article class="home-resource-card resource-card card p-4">
+            <div class="flex items-start gap-3">
+                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-base ${style.iconClass}">
+                    <i class="fa-solid ${style.icon}" aria-hidden="true"></i>
+                </span>
+                <div class="min-w-0 flex-1">
+                    <div class="flex items-start justify-between gap-2">
+                        <h4 class="text-sm font-extrabold leading-5 text-slate-900"
+                            title="${escapeHtml(title)}">
+                            ${escapeHtml(title)}
+                        </h4>
+                        ${lock}
+                    </div>
+                    <div class="mt-2 flex flex-wrap gap-1.5">
+                        ${meta.join("")}
+                    </div>
+                    ${description}
+                </div>
+            </div>
+            <div class="mt-auto flex items-center justify-between gap-2 pt-4">
+                ${date}
+                <button type="button"
+                        class="inline-flex shrink-0 items-center gap-1.5 rounded-lg
+                               bg-blue-600 px-3 py-1.5 text-xs font-bold text-white
+                               transition hover:bg-blue-700"
+                        data-home-resource
+                        data-resource-category="${escapeHtml(item.category)}"
+                        data-resource-id="${escapeHtml(item.id)}"
+                        data-resource-title="${escapeHtml(title)}">
+                    <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                    View
+                </button>
+            </div>
+        </article>
+    `;
+}
+
+async function renderHomeResources() {
+    const container = document.getElementById("homeResourceSections");
+
+    if (!container) {
+        return;
+    }
+
+    try {
+        const data = await getHomeResources(4);
+        const groups = {
+            notes: Array.isArray(data?.notes) ? data.notes : [],
+            pyq: Array.isArray(data?.pyq) ? data.pyq : [],
+            tnp: Array.isArray(data?.tnp) ? data.tnp : [],
+            syllabus: Array.isArray(data?.syllabus) ? data.syllabus : []
+        };
+
+        HOME_RESOURCE_SECTIONS.forEach(section => {
+            const grid = document.getElementById(section.gridId);
+            const empty = document.getElementById(section.emptyId);
+            const count = document.getElementById(section.countId);
+            const rows = groups[section.key] || [];
+
+            if (!grid) {
+                return;
+            }
+
+            if (!rows.length) {
+                grid.innerHTML = "";
+                empty?.classList.remove("hidden");
+                count?.classList.add("hidden");
+                return;
+            }
+
+            empty?.classList.add("hidden");
+            grid.innerHTML = rows.map(homeResourceCardHtml).join("");
+
+            if (count) {
+                count.textContent = `${rows.length} latest`;
+                count.classList.remove("hidden");
+            }
+        });
+
+        // Each section shows its own empty state when it has no rows.
+    } catch (error) {
+        console.error("Home resources load error:", error);
+    }
+}
+
+function showHomeResourceNotice(message) {
+    const notice = document.getElementById("homeResourceNotice");
+
+    if (!notice) {
+        return;
+    }
+
+    notice.textContent = message;
+    notice.classList.remove("hidden");
+
+    window.setTimeout(() => {
+        notice.textContent = "";
+        notice.classList.add("hidden");
+    }, 4500);
+}
+
+// =====================================================
+// Login-required popup
+// =====================================================
+
+let loginGate = null;
+
+function initLoginGate() {
+    const modal = document.getElementById("loginRequiredModal");
+
+    if (!modal) {
+        return null;
+    }
+
+    const cancel = document.getElementById("loginRequiredCancelBtn");
+    let lastFocused = null;
+
+    const isOpen = () => modal.classList.contains("is-open");
+
+    const open = () => {
+        lastFocused = document.activeElement;
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("login-gate-open");
+        cancel?.focus();
+    };
+
+    const close = () => {
+        modal.classList.remove("is-open");
+        modal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("login-gate-open");
+
+        if (lastFocused instanceof HTMLElement) {
+            lastFocused.focus();
+        }
+    };
+
+    cancel?.addEventListener("click", close);
+
+    // Clicking the dimmed backdrop (but not the card) closes it.
+    modal.addEventListener("click", event => {
+        if (event.target === modal) {
+            close();
+        }
+    });
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && isOpen()) {
+            close();
+        }
+    });
+
+    return { open, close, isOpen };
+}
+
+/**
+ * The session flag resolves asynchronously on load. Re-check the
+ * backend only when a token exists but the flag is still false, so
+ * a stale token shows the login gate instead of a broken viewer.
+ */
+async function resolveSignedIn() {
+    if (visitorSignedIn) {
+        return true;
+    }
+
+    if (!getAuthToken()) {
+        return false;
+    }
+
+    try {
+        const { data } = await getSession();
+        visitorSignedIn = Boolean(data?.session?.user);
+    } catch {
+        visitorSignedIn = false;
+    }
+
+    return visitorSignedIn;
+}
+
+// =====================================================
+// Secure PDF viewer (lazy: only for logged-in visitors)
+// =====================================================
+
+let pdfViewerPromise = null;
+
+/**
+ * The homepage does not ship the shared modals partial. Load just
+ * the secure PDF viewer from it the first time a signed-in visitor
+ * opens a document, then reuse the exact same reader as the
+ * dashboard (JWT relay, no download/print/save, right-click and
+ * Ctrl+S / Ctrl+P blocked).
+ */
+function ensurePdfViewer() {
+    if (document.getElementById("pdfViewerModal")) {
+        setupPdfViewer();
+        return Promise.resolve(true);
+    }
+
+    if (!pdfViewerPromise) {
+        pdfViewerPromise = fetch("./partials/modals.html")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Viewer partial failed (${response.status})`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                const template = document.createElement("template");
+                template.innerHTML = html;
+
+                const modal = template.content.querySelector("#pdfViewerModal");
+
+                if (!modal) {
+                    throw new Error("PDF viewer markup not found");
+                }
+
+                document.body.appendChild(modal);
+                setupPdfViewer();
+
+                return true;
+            })
+            .catch(error => {
+                console.error("PDF viewer load error:", error);
+                pdfViewerPromise = null;
+                return false;
+            });
+    }
+
+    return pdfViewerPromise;
+}
+
+function initHomeResourceActions() {
+    const container = document.getElementById("homeResourceSections");
+
+    if (!container) {
+        return;
+    }
+
+    container.addEventListener("click", async event => {
+        const button = event.target.closest("[data-home-resource]");
+
+        if (!button) {
+            return;
+        }
+
+        event.preventDefault();
+
+        const category = button.dataset.resourceCategory;
+        const id = button.dataset.resourceId;
+        const title = button.dataset.resourceTitle || "Document";
+
+        if (!category || !id) {
+            return;
+        }
+
+        if (!(await resolveSignedIn())) {
+            loginGate?.open();
+            return;
+        }
+
+        button.disabled = true;
+
+        try {
+            const ready = await ensurePdfViewer();
+
+            if (!ready) {
+                showHomeResourceNotice(
+                    "The secure viewer could not be loaded. Please try again."
+                );
+                return;
+            }
+
+            await openPdfViewer({ category, id, title });
+        } finally {
+            button.disabled = false;
+        }
+    });
+}
+
 // Session flag kept synchronous so the click guard below
 // can call preventDefault before navigation starts.
 let visitorSignedIn = false;
@@ -205,10 +588,49 @@ async function updateNavForSession() {
 }
 
 // =====================================================
-// Homepage contact popup (footer "Contact Us")
+// Homepage footer contact email (copy on click)
 // =====================================================
 
-const CONTACT_EMAIL = "abhishekbabu7275@gmail.com";
+const CONTACT_EMAIL = "techcampushub2026@gmail.com";
+
+let contactToast = null;
+let contactToastTimer = null;
+
+/**
+ * Small bottom toast used by the footer contact email. Created on
+ * first use so the footer markup stays free of decoration.
+ */
+function showContactToast(message) {
+    if (!contactToast) {
+        contactToast = document.createElement("div");
+        contactToast.id = "contactEmailToast";
+        contactToast.className = "contact-toast";
+        contactToast.setAttribute("role", "status");
+        contactToast.setAttribute("aria-live", "polite");
+        contactToast.innerHTML = `
+            <i class="fa-regular fa-circle-check" aria-hidden="true"></i>
+            <span data-contact-toast-text></span>
+        `;
+        document.body.appendChild(contactToast);
+    }
+
+    const text = contactToast.querySelector("[data-contact-toast-text]");
+
+    if (text) {
+        text.textContent = message;
+    }
+
+    contactToast.classList.add("is-visible");
+
+    if (contactToastTimer) {
+        window.clearTimeout(contactToastTimer);
+    }
+
+    contactToastTimer = window.setTimeout(() => {
+        contactToast?.classList.remove("is-visible");
+        contactToastTimer = null;
+    }, 2400);
+}
 
 /**
  * Copy text with the async Clipboard API, falling back to the
@@ -246,127 +668,21 @@ async function copyToClipboard(text) {
     }
 }
 
-function initContactPopup() {
-    const trigger = document.getElementById("contactUsBtn");
-    const popup = document.getElementById("contactUsPopup");
+function initContactEmailCopy() {
+    const button = document.getElementById("contactEmailBtn");
 
-    if (!trigger || !popup) {
+    if (!button) {
         return;
     }
 
-    const closeButton = document.getElementById("closeContactUsBtn");
-    const copyButton = document.getElementById("copyContactEmailBtn");
-    const copyLabel = copyButton?.querySelector("[data-copy-label]");
-    const emailLink = document.getElementById("contactEmailLink");
-    const status = document.getElementById("contactCopyStatus");
-    const caret = trigger.querySelector("[data-contact-caret]");
-
-    let copyTimer = null;
-
-    const isOpen = () => popup.classList.contains("is-open");
-
-    const resetCopyFeedback = () => {
-        if (copyTimer) {
-            window.clearTimeout(copyTimer);
-            copyTimer = null;
-        }
-
-        if (copyLabel) {
-            copyLabel.textContent = "Copy Email";
-        }
-
-        if (status) {
-            status.textContent = "";
-            status.classList.remove("text-red-500");
-            status.classList.add("text-emerald-600");
-        }
-    };
-
-    const setOpen = open => {
-        popup.classList.toggle("is-open", open);
-        popup.setAttribute("aria-hidden", String(!open));
-        trigger.setAttribute("aria-expanded", String(open));
-
-        if (caret) {
-            caret.style.transform = open ? "rotate(180deg)" : "";
-        }
-
-        if (!open) {
-            resetCopyFeedback();
-        }
-    };
-
-    trigger.addEventListener("click", event => {
-        event.stopPropagation();
-        setOpen(!isOpen());
-    });
-
-    closeButton?.addEventListener("click", () => {
-        setOpen(false);
-        trigger.focus();
-    });
-
-    // Opening the mail app closes the popup behind it.
-    emailLink?.addEventListener("click", () => setOpen(false));
-
-    // Clicking anywhere outside the popup closes it.
-    document.addEventListener("click", event => {
-        if (!isOpen()) {
-            return;
-        }
-
-        if (popup.contains(event.target) || trigger.contains(event.target)) {
-            return;
-        }
-
-        setOpen(false);
-    });
-
-    document.addEventListener("keydown", event => {
-        if (event.key === "Escape" && isOpen()) {
-            setOpen(false);
-            trigger.focus();
-        }
-    });
-
-    copyButton?.addEventListener("click", async () => {
+    button.addEventListener("click", async () => {
         const copied = await copyToClipboard(CONTACT_EMAIL);
 
-        if (!copied) {
-            if (status) {
-                status.textContent = "Couldn't copy — select the email instead.";
-                status.classList.remove("text-emerald-600");
-                status.classList.add("text-red-500");
-            }
-
-            return;
-        }
-
-        if (copyLabel) {
-            copyLabel.textContent = "Copied!";
-        }
-
-        if (status) {
-            status.textContent = "Email copied!";
-            status.classList.remove("text-red-500");
-            status.classList.add("text-emerald-600");
-        }
-
-        if (copyTimer) {
-            window.clearTimeout(copyTimer);
-        }
-
-        copyTimer = window.setTimeout(() => {
-            if (copyLabel) {
-                copyLabel.textContent = "Copy Email";
-            }
-
-            if (status) {
-                status.textContent = "";
-            }
-
-            copyTimer = null;
-        }, 2200);
+        showContactToast(
+            copied
+                ? "Email copied successfully!"
+                : "Couldn't copy the email — please select it instead."
+        );
     });
 }
 
@@ -374,8 +690,12 @@ document.addEventListener("DOMContentLoaded", () => {
     updateNavForSession();
     renderOverallRating();
     renderCourseCatalog();
-    initContactPopup();
+    renderHomeResources();
+    initContactEmailCopy();
     initShare();
+
+    loginGate = initLoginGate();
+    initHomeResourceActions();
 
     // Viewing or buying a course requires an account:
     // guests are redirected to the login page.

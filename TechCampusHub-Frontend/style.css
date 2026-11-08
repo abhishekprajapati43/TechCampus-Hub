@@ -129,6 +129,99 @@
                 0 14px 34px rgba(15, 39, 74, .10);
         }
 
+        /* Homepage resource preview cards: same hover lift as the
+           dashboard cards, but they fill the grid row height. */
+        .home-resource-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .home-resource-meta {
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+
+            padding: .2rem .55rem;
+
+            border-radius: 999px;
+            background: #f1f5f9;
+
+            color: #475569;
+            font-size: .7rem;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+
+        /* =====================================================
+           HOMEPAGE LOGIN GATE
+        ===================================================== */
+
+        body.login-gate-open {
+            overflow: hidden;
+        }
+
+        .login-gate-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 120;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 1rem;
+
+            background: rgba(15, 23, 42, .55);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+
+            transition:
+                opacity .2s ease,
+                visibility .2s ease;
+        }
+
+        .login-gate-overlay.is-open {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .login-gate-card {
+            width: min(26rem, 100%);
+            max-height: calc(100vh - 2rem);
+            max-height: calc(100dvh - 2rem);
+            overflow-y: auto;
+            overscroll-behavior: contain;
+
+            border-radius: 1.5rem;
+            background: #fff;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, .28);
+
+            opacity: 0;
+            transform: translateY(18px) scale(.97);
+
+            transition:
+                opacity .22s ease,
+                transform .22s ease;
+        }
+
+        .login-gate-overlay.is-open .login-gate-card {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .login-gate-overlay,
+            .login-gate-card {
+                transition: none;
+            }
+        }
+
         .input {
             width: 100%;
 
@@ -435,64 +528,165 @@
         }
 
         /* =====================================================
-   HOMEPAGE CONTACT POPUP
+   FOOTER CONTACT EMAIL TOAST (index.html)
 ====================================================== */
 
-        .contact-popup {
-            width: min(18rem, calc(100vw - 2rem));
+        .contact-toast {
+            position: fixed;
+            left: 50%;
+            bottom: 1.25rem;
+            z-index: 115;
 
-            transform-origin: bottom left;
-            transform: translateY(6px) scale(.97);
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+
+            max-width: calc(100vw - 2rem);
+            padding: .7rem 1.05rem;
+
+            border-radius: 999px;
+            background: #0f172a;
+            color: #fff;
+            box-shadow: 0 16px 40px rgba(15, 23, 42, .3);
+
+            font-size: .78rem;
+            font-weight: 700;
+            line-height: 1.3;
+
             opacity: 0;
             visibility: hidden;
+            pointer-events: none;
+
+            transform: translate(-50%, 14px);
 
             transition:
-                opacity .18s ease,
-                transform .18s ease,
-                visibility .18s ease;
+                opacity .2s ease,
+                transform .2s ease,
+                visibility .2s ease;
         }
 
-        .contact-popup.is-open {
+        .contact-toast i {
+            flex-shrink: 0;
+            color: #34d399;
+        }
+
+        .contact-toast.is-visible {
             opacity: 1;
             visibility: visible;
-
-            transform: translateY(0) scale(1);
+            transform: translate(-50%, 0);
         }
 
         @media (min-width: 640px) {
-            .contact-popup {
-                transform-origin: bottom right;
-            }
-        }
-
-        /* Short viewports (phone/tablet landscape): anchor the popup to
-           the viewport so it can never open above the visible area. */
-        @media (max-height: 540px) {
-            #contactUsPopup.contact-popup {
-                position: fixed;
-                left: 50%;
-                right: auto;
-                top: auto;
-                bottom: 1rem;
-                z-index: 90;
-
-                margin: 0;
-
-                max-height: calc(100vh - 2rem);
-                max-height: calc(100dvh - 2rem);
-                overflow-y: auto;
-
-                transform-origin: bottom center;
-                transform: translate(-50%, 8px) scale(.97);
+            .contact-toast {
+                left: auto;
+                right: 1.5rem;
+                bottom: 1.5rem;
+                transform: translateY(14px);
             }
 
-            #contactUsPopup.contact-popup.is-open {
-                transform: translate(-50%, 0) scale(1);
+            .contact-toast.is-visible {
+                transform: translateY(0);
             }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .contact-popup {
+            .contact-toast {
+                transition-duration: .01ms;
+            }
+        }
+
+        /* =====================================================
+   PUBLIC PAGES FAQ ACCORDIONS (help-center.html)
+====================================================== */
+
+        .faq-item {
+            border: 1px solid #e2e8f0;
+            border-radius: .9rem;
+            background: #f8fafc;
+            overflow: hidden;
+        }
+
+        .faq-item summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: .85rem;
+
+            padding: .95rem 1.1rem;
+            cursor: pointer;
+
+            list-style: none;
+
+            font-size: .9rem;
+            font-weight: 700;
+            line-height: 1.45;
+            color: #0f172a;
+
+            transition: background .15s ease, color .15s ease;
+        }
+
+        .faq-item summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .faq-item summary:hover {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .faq-item .faq-caret {
+            flex-shrink: 0;
+            font-size: .7rem;
+            color: #94a3b8;
+
+            transition: transform .18s ease, color .15s ease;
+        }
+
+        .faq-item[open] summary {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .faq-item[open] .faq-caret {
+            transform: rotate(180deg);
+            color: #2563eb;
+        }
+
+        .faq-item .faq-body {
+            padding: .9rem 1.1rem 1.05rem;
+
+            font-size: .875rem;
+            line-height: 1.7;
+            color: #475569;
+        }
+
+        .faq-item .faq-body p {
+            margin: 0;
+        }
+
+        .faq-item .faq-body p + p {
+            margin-top: .6rem;
+        }
+
+        .faq-item .faq-body strong {
+            color: #0f172a;
+        }
+
+        @media (min-width: 640px) {
+            .faq-item summary,
+            .faq-item .faq-body {
+                padding-left: 1.35rem;
+                padding-right: 1.35rem;
+            }
+
+            .faq-item summary {
+                font-size: .95rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .faq-item .faq-caret {
                 transition-duration: .01ms;
             }
         }
@@ -534,6 +728,52 @@
                 content: "";
                 flex: 1;
                 border-top: 2px dashed #bfdbfe;
+            }
+        }
+
+        /* =====================================================
+           COURSE CHECKOUT — DYNAMIC UPI QR
+        ===================================================== */
+
+        .buy-qr {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 168px;
+            height: 168px;
+            padding: .55rem;
+
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            background: #fff;
+            box-shadow: 0 8px 24px rgba(15, 39, 74, .08);
+        }
+
+        .buy-qr svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .buy-qr.buy-qr-error {
+            border-style: dashed;
+            background: #f8fafc;
+        }
+
+        .buy-qr-fallback {
+            padding: .5rem;
+            color: #64748b;
+            font-size: .7rem;
+            font-weight: 700;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        @media (max-width: 380px) {
+            .buy-qr {
+                width: 148px;
+                height: 148px;
             }
         }
 

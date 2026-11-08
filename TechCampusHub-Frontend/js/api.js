@@ -835,6 +835,16 @@ export function dashboardSummary() {
     return apiGet("/api/dashboard/summary");
 }
 
+/**
+ * Public homepage previews: the newest Notes, PYQs, TNP resources and
+ * Syllabus. Metadata only - the backend never includes a document URL.
+ */
+export function getHomeResources(limit = 4) {
+    const size = Math.max(1, Math.min(Number(limit) || 4, 12));
+
+    return apiGet(`/api/public/resources?limit=${size}`, false);
+}
+
 // =====================================================
 // Related videos
 // =====================================================

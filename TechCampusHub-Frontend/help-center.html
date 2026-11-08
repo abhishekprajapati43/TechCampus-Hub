@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Help Center | TechCampus_Hub</title>
+        <meta name="description" content="TechCampus_Hub Help Center - FAQs about login issues, payment help, course access, notes and the PDF viewer, plus contact information.">
+        <meta name="theme-color" content="#102a56">
+        <link rel="icon" type="image/png" href="./assets/logo.png">
+        <link rel="apple-touch-icon" href="./assets/logo.png">
+        <!-- =====================================================
+         TAILWIND CSS
+    ====================================================== -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- =====================================================
+         FONT AWESOME
+    ====================================================== -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+        <!-- =====================================================
+         TAILWIND CONFIG
+    ====================================================== -->
+        <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: "#102a56",
+                        bluehub: "#2563eb",
+                        softbg: "#f5f8fc"
+                    },
+
+                    boxShadow: {
+                        soft: "0 8px 28px rgba(15,39,74,.08)"
+                    }
+                }
+            }
+        };
+        </script>
+        <!-- =====================================================
+         CUSTOM CSS
+    ====================================================== -->
+        <link rel="stylesheet" href="style.css">
+    </head>
+<body data-page="help-center">
+        <!-- =====================================================
+         SITE HEADER
+    ====================================================== -->
+        <header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
+            <div class="max-w-6xl mx-auto px-4 sm:px-5 h-20 flex items-center justify-between gap-3 sm:gap-4">
+                <a href="./index.html" class="flex items-center gap-2 sm:gap-3 min-w-0">
+                    <div class="text-logo-icon shrink-0">
+                        <img src="./assets/logo.png" alt="TechCampus Hub logo">
+                    </div>
+                    <div class="min-w-0">
+                        <p class="font-extrabold text-base sm:text-lg leading-tight truncate">
+                            TechCampus_Hub
+                        </p>
+                        <p class="hidden sm:block text-xs text-slate-500 leading-tight truncate">
+                            College Learning Portal
+                        </p>
+                    </div>
+                </a>
+                <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+                    <a href="./index.html#courses" class="hover:text-blue-600 transition">
+                        Courses
+                    </a>
+                    <a href="./index.html#how" class="hover:text-blue-600 transition">
+                        How it works
+                    </a>
+                    <a href="./index.html#features" class="hover:text-blue-600 transition">
+                        Resources
+                    </a>
+                </nav>
+                <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+
+                    <!-- Share the website (native sheet on mobile,
+                         themed popup on desktop) -->
+                    <button type="button"
+                            data-share-trigger
+                            aria-haspopup="dialog"
+                            aria-expanded="false"
+                            aria-label="Share TechCampus Hub"
+                            title="Share TechCampus Hub"
+                            class="flex h-9 w-9 sm:h-10 sm:w-auto shrink-0 items-center justify-center
+                                   gap-2 rounded-xl border border-slate-200 bg-white px-0 sm:px-3.5
+                                   text-xs sm:text-sm font-bold text-slate-600
+                                   hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700
+                                   transition">
+                        <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
+                        <span class="hidden sm:inline">Share</span>
+                    </button>
+
+                    <!-- Guest actions -->
+                    <div id="guestNavActions" class="flex items-center gap-3">
+                        <a href="./login.html" class="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold px-3 sm:px-5 py-2 sm:py-2.5 whitespace-nowrap transition">
+                            Get started
+                        </a>
+                    </div>
+
+                    <!-- Signed-in actions -->
+                    <div id="memberNavActions" class="hidden items-center gap-3">
+                        <a href="./courses.html" class="hidden sm:inline text-sm font-bold text-slate-600 hover:text-blue-600 transition">
+                            My Courses
+                        </a>
+                        <a href="./dashboard.html" class="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold px-3 sm:px-5 py-2 sm:py-2.5 whitespace-nowrap transition">
+                            Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- =====================================================
+             PAGE HERO
+        ====================================================== -->
+            <section class="bg-softbg border-b border-slate-200">
+                <div class="max-w-6xl mx-auto px-5 py-14 md:py-20 text-center">
+                    <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-2xl text-blue-600"
+                          aria-hidden="true">
+                        <i class="fa-solid fa-life-ring"></i>
+                    </span>
+                    <p class="mt-5 text-xs font-extrabold uppercase tracking-widest text-blue-600">
+                        Support
+                    </p>
+                    <h1 class="mt-2 text-3xl md:text-4xl font-extrabold text-slate-900">
+                        Help Center
+                    </h1>
+                    <p class="mt-3 mx-auto max-w-2xl text-sm leading-6 md:text-base text-slate-500">
+                        Quick answers about login, payments, course access and the notes
+                        viewer — plus how to reach us when nothing here fits.
+                    </p>
+                </div>
+            </section>
+
+            <!-- =====================================================
+             QUICK LINKS
+        ====================================================== -->
+            <section class="max-w-6xl mx-auto px-5 -mt-9">
+                <div class="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <a href="#login-issues"
+                       class="card p-5 flex items-start gap-3 hover:-translate-y-0.5 transition">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-key"></i>
+                        </span>
+                        <span class="min-w-0">
+                            <span class="block font-extrabold text-slate-900">Login Issues</span>
+                            <span class="mt-1 block text-sm text-slate-500">Sign-in, password resets and sessions.</span>
+                        </span>
+                    </a>
+                    <a href="#payment-help"
+                       class="card p-5 flex items-start gap-3 hover:-translate-y-0.5 transition">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500 text-white"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                        </span>
+                        <span class="min-w-0">
+                            <span class="block font-extrabold text-slate-900">Payment Help</span>
+                            <span class="mt-1 block text-sm text-slate-500">UPI checkout, references and approvals.</span>
+                        </span>
+                    </a>
+                    <a href="#course-access-help"
+                       class="card p-5 flex items-start gap-3 hover:-translate-y-0.5 transition">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-500 text-white"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </span>
+                        <span class="min-w-0">
+                            <span class="block font-extrabold text-slate-900">Course Access Help</span>
+                            <span class="mt-1 block text-sm text-slate-500">Courses, bundles and unlocking notes.</span>
+                        </span>
+                    </a>
+                    <a href="#notes-pdf-help"
+                       class="card p-5 flex items-start gap-3 hover:-translate-y-0.5 transition">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-white"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </span>
+                        <span class="min-w-0">
+                            <span class="block font-extrabold text-slate-900">Notes &amp; PDF Viewer Help</span>
+                            <span class="mt-1 block text-sm text-slate-500">Opening, reading and viewer controls.</span>
+                        </span>
+                    </a>
+                    <a href="#contact-information"
+                       class="card p-5 flex items-start gap-3 hover:-translate-y-0.5 transition">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-500 text-white"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-envelope"></i>
+                        </span>
+                        <span class="min-w-0">
+                            <span class="block font-extrabold text-slate-900">Contact Information</span>
+                            <span class="mt-1 block text-sm text-slate-500">Email and Telegram — we reply within a day.</span>
+                        </span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- =====================================================
+             FAQ SECTIONS
+        ====================================================== -->
+            <section class="max-w-4xl mx-auto px-5 py-12 md:py-16 space-y-12">
+
+                <!-- LOGIN ISSUES -->
+                <div id="login-issues" class="scroll-mt-28">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-key"></i>
+                        </span>
+                        <h2 class="text-xl font-extrabold text-slate-900">Login Issues</h2>
+                    </div>
+
+                    <div class="mt-5 card p-4 sm:p-6 space-y-3">
+                        <details class="faq-item">
+                            <summary>
+                                I can't sign in to my account.
+                                <i class="fa-solid fa-chevron-down faq-caret" aria-hidden="true"></i>
+                            </summary>
+                            <div class="faq-body">
+                                <p>
+                                    Check that you are using the exact email address you registered
+                                    with and that the password is correct (it is case-sensitive).
+                                    If you still can't get in, use <strong>Forgot password?</strong>
+                                    on the login page to set a new one.
+                                </p>
+                            </div>
+                        </details>
+
+                        <details class="faq-item">
+                            <summary>
+                                I forgot my password — how do I reset it?
+                                <i class="fa-solid fa-chevron-down faq-caret" aria-hidden="true"></i>
+                            </summary>
+                            <div class="faq-body">
+                                <p>
+                                    Open the login page and click <strong>Forgot password?</strong>,
+                                    then follow the reset steps for your registered email. If the
+                                    email never arrives, check your spam folder and contact us.
+                                </p>
+                            </div>
+                        </details>
+
+                        <details class="faq-item">
+                            <summary>
+                                Why was I signed out on my new phone or laptop?
+                                <i class="fa-solid fa-chevron-down faq-caret" aria-hidden="true"></i>
+                            </summary>
+                            <div class="faq-body">
+                                <p>
+                                    Your session is stored on the device and browser you sign in
+                                    from, so a new device simply asks you to log in again with the
+                                    same email and password. Your courses and unlocks stay attached
+                                    to your account.
+                                </p>
+                            </div>
+                        </details>
+
+                        <details class="faq-item">
+                            <summary>
+                                The page keeps sending me back to the login screen.
+                                <i class="fa-solid fa-chevron-down faq-caret" aria-hidden="true"></i>
+                            </summary>
+                            <div class="faq-body">
+                                <p>
+                                    Your session has probably expired — sign in once more. If it
+                                    happens immediately, clear the site's cookies and cache in your
+                                    browser and try again. Still stuck? Reach out under
+                                    <a href="#contact-information" class="text-blue-600 font-semibold hover:underline">Contact Information</a>.
+                                </p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+
+                <!-- PAYMENT HELP -->
+                <div id="payment-help" class="scroll-mt-28">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500 text-white"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                        </span>
+                        <h2 class="text-xl font-extrabold text-slate-900">Payment Help</h2>
+                    </div>
+
+                    <div class="mt-5 card p-4 sm:p-6 space-y-3">
+                        <details class="faq-item">
+                            <summary>
+                                How do I pay for a course?
+                                <i class="fa-solid fa-chevron-down faq-caret" aria-hidden="true"></i>
+                            </summary>
+                            <div class="faq-body">
+                                <p>
+                                    Open the course and start the purchase. Scan the QR code or pay
+                                    the displayed UPI ID with any UPI app, then submit your
+                                    transaction reference (UTR / Ref no.) at checkout. The payment
+                                    is a one-time purchase for that bundle.
+                                </p>
+                            </div>
+                        </details>
+
+                        <details class="faq-item">
+                            <summary>
+                                I paid, but my notes are still locked.
+                                <i class="fa-solid fa-chevron-down faq-caret" aria-hidden="true"></i>
+                            </summary>
+                            <div class="faq-body">
+                                <p>
+                                    Every transaction reference is reviewed and approved before the
+                                    bundle unlocks — this normally happens within a day. You can
+                                    follow the status in <strong>Payment History</strong>. If it is
+                                    still locked after approval time, contact us with your
+                                    transaction reference and we will sort it out.
+                                </p>
+                            </div>
+                        </details>
+
+                        <details class="faq-item">
+                            <summary>
+                                Where do I find my transaction reference (UTR)?
+                                <i class="fa-solid fa-chevron-down faq-caret" aria-hidden="true"></i>
+                            </summary>
+                            <div class="faq-body">
+                                <p>
+                                    Open your UPI app, go to the payment you made, open
+                                    <strong>Transaction details</strong> and copy the
+                                    <strong>UTR / Ref no.</strong> — that is the number the checkout
+                                    asks for.
+                                </p>
+                            </div>
+                        </details>
+
+                        <details class="faq-item">
+                            <summary>
+                                Is this a subscription?
+                                <i class="fa-solid fa-chevron-down faq-caret" aria-hidden="true"></i>
+                            </summary>
+                            <div class="faq-body">
+                                <p>
+                                    No. You pay once per bundle and every note inside that bundle
+                                    opens for your account — there is no recurring charge.
+                                </p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+
+                <!-- COURSE ACCESS HELP -->
+                <div id="course-access-help" class="scroll-mt-28">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-500 text-white"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </span>
+                        <h2 class="text-xl font-extrabold text-slate-900">Course Access Help</h2>
+                    </div>
+
+                    <div class="mt-5 card p-4 sm:p-6 space-y-3">
+                        <details class="faq-item">
+                            <summary>
+                                Which courses does the portal cover?
+                                <i class="fa-solid fa-chevron-down faq-caret" aria-hidden="true"></i>
+                            </summary>
+                            <div class="faq-body">
+                                <p>
+                                    <strong>BCA</strong>, <strong>MCA</strong> and
+                                    <strong>B.Tech</strong> — with subject-wise notes, previous year
+                                    papers, TNP resources, syllabus and exam timetables. See
+                                    <a href="./about.html" class="text-blue-600 font-semibold hover:underline">About Us</a>
+                                    for the full picture.
+                                </p>
+                            </div>
+                        </details>
+
+                        <details class="faq-item">
+                            <summary>
+                                Can I browse without an account?
+                                <i class="fa-solid fa-chevron-down faq-caret" aria-hidden="true"></i>
+                            </summary>
+                            <div class="faq-body">
+                                <p>
+                                    Yes — visitors can browse the homepage previews, which show the
+                                    title, subject and course of the latest uploads. Opening the
+                                    material itself requires an account:
+                                    <em>Please login to access Notes, PYQs, TNP, and Syllabus.</em>
+                                </p>
+                            </div>
+                        </details>
+
+                        <details class="faq-item">
+                            <summary>
+                                Where do I find the courses I bought?
+                                <i class="fa-solid fa-chevron-down faq-caret" aria-hidden="true"></i>
+                            </summary>
+                            <div class="faq-body">
+                                <p>
+                                    Sign in and open the <strong>Dashboard</strong> or
+                                    <strong>My Courses</strong> from the header — everything unlocked
+                                    for your account is listed there.
+                                </p>
+                            </div>
+                        </details>
+
+                        <details class="faq-item">
+                            <summary>
+                                I paid on another device — how do I get access here?
+                                <i class="fa-solid fa-chevron-down faq-caret" aria-hidden="true"></i>
+                            </summary>
+                            <div class="faq-body">
+                                <p>
+                                    Sign in on this device with the same email address. Purchases
+                                    and unlocks follow your account, not the device.
+                                </p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+
+                <!-- NOTES & PDF VIEWER HELP -->
+                <div id="notes-pdf-help" class="scroll-mt-28">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-white"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </span>
+                        <h2 class="text-xl font-extrabold text-slate-900">Notes &amp; PDF Viewer Help</h2>
+                    </div>
+
+                    <div class="mt-5 card p-4 sm:p-6 space-y-3">
+                        <details class="faq-item">
+                            <summary>
+                                How do I open a note or previous year paper?
+                                <i class="fa-solid fa-chevron-down faq-caret" aria-hidden="true"></i>
+                            </summary>
+                            <div class="faq-body">
+                                <p>
+                                    Sign in, then open the resource from the homepage or your
+                                    course. It loads in the built-in secure viewer right inside the
+                                    browser — no extra app or extension is needed.
+                                </p>
+                            </div>
+                        </details>
+
+                        <details class="faq-item">
+                            <summary>
+                                The viewer shows an error or never finishes loading.
+                                <i class="fa-solid fa-chevron-down faq-caret" aria-hidden="true"></i>
+                            </summary>
+                            <div class="faq-body">
+                                <p>
+                                    Check your internet connection, refresh the page and open the
+                                    resource once more. If it still fails, tell us the course,
+                                    semester and note title under
+                                    <a href="#contact-information" class="text-blue-600 font-semibold hover:underline">Contact Information</a>
+                                    and we will look into it.
+                                </p>
+                            </div>
+                        </details>
+
+                        <details class="faq-item">
+                            <summary>
+                                How do I move between pages and zoom?
+                                <i class="fa-solid fa-chevron-down faq-caret" aria-hidden="true"></i>
+                            </summary>
+                            <div class="faq-body">
+                                <p>
+                                    The viewer toolbar shows <strong>Page X of Y</strong> together
+                                    with zoom out, zoom level and zoom in buttons. Scroll inside the
+                                    viewer to read through the document.
+                                </p>
+                            </div>
+                        </details>
+
+                        <details class="faq-item">
+                            <summary>
+                                Why can't I download, save or print the file?
+                                <i class="fa-solid fa-chevron-down faq-caret" aria-hidden="true"></i>
+                            </summary>
+                            <div class="faq-body">
+                                <p>
+                                    The material opens inside the secure viewer so it stays with
+                                    the students it was uploaded for. Use the viewer's page and
+                                    zoom controls to read it on any screen.
+                                </p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+
+                <!-- CONTACT INFORMATION -->
+                <div id="contact-information" class="scroll-mt-28">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-500 text-white"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-envelope"></i>
+                        </span>
+                        <h2 class="text-xl font-extrabold text-slate-900">Contact Information</h2>
+                    </div>
+
+                    <div class="mt-5 card p-5 sm:p-7 text-center">
+                        <p class="text-sm leading-6 text-slate-500">
+                            Nothing above solved it? Email us directly — we usually reply
+                            within a day.
+                        </p>
+
+                        <!-- Clicking the address only copies it - it never
+                             opens Gmail or the default mail app. -->
+                        <button type="button"
+                                data-copy-email
+                                class="mt-5 inline-flex max-w-full items-center gap-2 rounded-xl
+                                       border border-blue-200 bg-blue-50 px-4 py-3 text-left
+                                       break-words cursor-pointer text-sm font-bold text-blue-700
+                                       transition-colors hover:bg-blue-100 sm:text-base"
+                                title="Copy email address">
+                            <i class="fa-solid fa-envelope shrink-0" aria-hidden="true"></i>
+                            <span>techcampushub2026<wbr>@gmail.com</span>
+                            <i class="fa-regular fa-copy shrink-0 text-xs opacity-60" aria-hidden="true"></i>
+                        </button>
+
+                        <p class="mt-3 text-xs font-semibold text-slate-400">
+                            Click to copy — nothing else opens.
+                        </p>
+
+                        <div class="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                            <a href="./login.html"
+                               class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-bold text-white transition hover:bg-blue-700 sm:w-auto">
+                                <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
+                                Login / Register
+                            </a>
+                            <a href="https://t.me/TechCampus_Hub"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 font-bold text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 sm:w-auto">
+                                <i class="fa-brands fa-telegram" aria-hidden="true"></i>
+                                Telegram channel
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+
+        <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+        <footer class="border-t border-slate-200 bg-white">
+            <div class="max-w-6xl mx-auto px-5 py-7 lg:py-8 grid grid-cols-1 min-[560px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-[1.2fr_1fr_1.5fr_1.05fr_1.1fr] gap-x-6 gap-y-7">
+                <div>
+                    <p class="font-extrabold">TechCampus_Hub</p>
+                    <p class="text-xs text-slate-500">College Learning Portal</p>
+                    <p class="mt-3 text-sm text-slate-500">
+                        Notes, TNP resources, PYQ papers and exam timetables
+                        for MCA, B.Tech &amp; BCA students.
+                    </p>
+                </div>
+                <div>
+                    <p class="font-extrabold text-sm uppercase tracking-wide text-slate-400">
+                        Portal
+                    </p>
+                    <ul class="mt-3 space-y-1.5 text-sm text-slate-600">
+                        <li><a href="./index.html#courses" class="hover:text-blue-600 transition">Courses</a></li>
+                        <li><a href="./index.html#how" class="hover:text-blue-600 transition">How it works</a></li>
+                        <li><a href="./login.html" class="hover:text-blue-600 transition">Login / Sign up</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="font-extrabold text-sm uppercase tracking-wide text-slate-400">
+                        Support
+                    </p>
+                    <ul class="mt-3 space-y-1.5 text-sm text-slate-600">
+                        <li><a href="./help-center.html" class="hover:text-blue-600 transition">Help Center</a></li>
+                        <li><a href="./help-center.html#contact-information" class="hover:text-blue-600 transition">Contact Us</a></li>
+                    </ul>
+
+                    <!-- Clicking the address only copies it - it never
+                         opens Gmail or the default mail app. -->
+                    <button type="button"
+                            data-copy-email
+                            class="mt-2.5 inline-flex max-w-full items-center gap-2 text-left
+                                   break-words cursor-pointer rounded-lg px-2 py-1.5
+                                   text-sm font-semibold text-blue-600
+                                   transition-colors hover:bg-blue-50 hover:text-blue-700"
+                            title="Copy email address">
+                        <i class="fa-solid fa-envelope shrink-0" aria-hidden="true"></i>
+                        <span>techcampushub2026<wbr>@gmail.com</span>
+                        <i class="fa-regular fa-copy shrink-0 text-xs opacity-60" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div>
+                    <p class="font-extrabold text-sm uppercase tracking-wide text-slate-400">
+                        Community
+                    </p>
+                    <ul class="mt-3 space-y-1.5 text-sm text-slate-600">
+                        <li>
+                            <a href="https://t.me/TechCampus_Hub" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition">
+                                <i class="fa-brands fa-telegram mr-2"></i>Telegram channel
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="font-extrabold text-sm uppercase tracking-wide text-slate-400">
+                        Company
+                    </p>
+                    <ul class="mt-3 space-y-1.5 text-sm text-slate-600">
+                        <li><a href="./about.html" class="hover:text-blue-600 transition">About Us</a></li>
+                        <li><a href="#" class="hover:text-blue-600 transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-blue-600 transition">Terms &amp; Conditions</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-100 py-4 text-center">
+                <p class="text-xs leading-5 text-slate-400">
+                    © 2026 TechCampus_Hub. All Rights Reserved.
+                </p>
+            </div>
+        </footer>
+
+        <script src="./js/env.js"></script>
+        <script type="module" src="./js/public-page.js"></script>
+    </body>
+</html>

@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SiteSettingService {
 
     /** Values used until an admin saves a real one. */
-    public static final String DEFAULT_UPI_ID = "techcampushub@upi";
+    public static final String DEFAULT_UPI_ID = "abhishekprajapati8115@okicici";
     public static final String DEFAULT_GEMINI_URL = "https://gemini.google.com";
     public static final String DEFAULT_TELEGRAM_LINK = "https://t.me/TechCampus_Hub";
 

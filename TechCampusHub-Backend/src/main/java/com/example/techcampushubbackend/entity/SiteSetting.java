@@ -31,7 +31,7 @@ public class SiteSetting extends Auditable {
     @Id
     private Long id;
 
-    /** VPA shown in the UPI payment modal, e.g. techcampushub@upi. */
+    /** VPA shown in the UPI payment modal, e.g. abhishekprajapati8115@okicici. */
     @Column(name = "upi_id", length = 120)
     private String upiId;
 

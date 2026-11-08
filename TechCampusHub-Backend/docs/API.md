@@ -119,7 +119,7 @@ POST /api/auth/login
 
 ```json
 // SiteSettingRequest - all fields optional
-{ "upiId": "techcampushub@upi",
+{ "upiId": "abhishekprajapati8115@okicici",
   "geminiUrl": "https://gemini.google.com",
   "telegramLink": "https://t.me/techcampushub" }
 ```

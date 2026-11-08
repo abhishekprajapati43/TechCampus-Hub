@@ -55,7 +55,7 @@ alter table public.site_settings
     add column if not exists upi_id text;
 
 update public.site_settings
-   set upi_id = 'techcampushub@upi'
+   set upi_id = 'abhishekprajapati8115@okicici'
  where id = 1 and (upi_id is null or upi_id = '');
 
 -- -------------------------------------------------

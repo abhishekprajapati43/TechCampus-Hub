@@ -37,7 +37,8 @@ import {
 // Constants
 // =====================================================
 
-export const DEFAULT_UPi_ID = "techcampushub@upi";
+export const DEFAULT_UPi_ID = "abhishekprajapati8115@okicici";
+export const UPI_PAYEE_NAME = "Abhishek Prajapati";
 
 const UPi_STORAGE_KEY = "campusnotes:upiId";
 const PURCHASES_STORAGE_KEY = "campusnotes:purchases";
@@ -839,10 +840,12 @@ export async function saveUpiId(value) {
 }
 
 export function buildUpiLink({ upiId, amount, title }) {
+    const payable = Math.max(0, Number(amount) || 0);
+
     const params = new URLSearchParams({
         pa: upiId,
-        pn: "TechCampus_Hub",
-        am: String(Number(amount) || 0),
+        pn: UPI_PAYEE_NAME,
+        am: String(payable),
         cu: "INR",
         tn: String(title || "Course purchase")
     });
@@ -1334,6 +1337,181 @@ function coursesMessage(text, type = "info") {
 
 let activeCourse = null;
 let upiId = DEFAULT_UPi_ID;
+let upiCopyTimer = null;
+
+/**
+ * Copy text with the async Clipboard API, falling back to the
+ * legacy execCommand path for older browsers / insecure origins.
+ */
+async function copyToClipboard(text) {
+    try {
+        if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+            return true;
+        }
+    } catch {
+        // Fall through to the legacy path.
+    }
+
+    try {
+        const area = document.createElement("textarea");
+
+        area.value = text;
+        area.setAttribute("readonly", "");
+        area.style.position = "fixed";
+        area.style.top = "-1000px";
+        area.style.opacity = "0";
+
+        document.body.appendChild(area);
+        area.select();
+        area.setSelectionRange(0, text.length);
+
+        const copied = document.execCommand("copy");
+
+        area.remove();
+        return copied;
+    } catch {
+        return false;
+    }
+}
+
+/** Final payable amount for the course (discount already applied). */
+function getCheckoutAmount(course) {
+    const offerPrice = offerPriceFor(course);
+
+    return offerPrice != null
+        ? offerPrice
+        : Number(course?.price_inr) || 0;
+}
+
+/**
+ * Renders the current UPI payment URI as an inline SVG QR code.
+ * Called every time the checkout is (re)rendered, so switching
+ * course, applying the 1+1 discount or changing the final amount
+ * always produces a fresh code — never a static image.
+ */
+function renderCheckoutQr(payload) {
+    const box = $("buyQrCode");
+
+    if (!box) {
+        return false;
+    }
+
+    try {
+        if (typeof window.qrcode !== "function") {
+            throw new Error("QR generator is not loaded.");
+        }
+
+        const qr = window.qrcode(0, "M");
+
+        qr.addData(payload, "Byte");
+        qr.make();
+
+        box.innerHTML = qr.createSvgTag({
+            cellSize: 4,
+            margin: 1,
+            scalable: true
+        });
+        box.classList.remove("buy-qr-error");
+        box.dataset.qrPayload = payload;
+
+        return true;
+    } catch (error) {
+        console.error("UPI QR render error:", error);
+
+        box.innerHTML = `
+            <span class="buy-qr-fallback">
+                QR unavailable<br>Use “Open UPI app”
+            </span>`;
+        box.classList.add("buy-qr-error");
+        box.dataset.qrPayload = payload;
+
+        return false;
+    }
+}
+
+/** Rebuild the UPI text, deep link and QR from the live checkout state. */
+function updateCheckoutPaymentDetails(
+    course = activeCourse,
+    amount = getCheckoutAmount(course)
+) {
+    if (!course) {
+        return "";
+    }
+
+    const upiLink = buildUpiLink({
+        upiId,
+        amount,
+        title: course.title
+    });
+
+    const upiText = $("buyUpiIdText");
+
+    if (upiText) {
+        upiText.textContent = upiId;
+    }
+
+    const openLink = $("buyUpiLink");
+
+    if (openLink) {
+        openLink.href = upiLink;
+    }
+
+    renderCheckoutQr(upiLink);
+
+    return upiLink;
+}
+
+function resetUpiCopyFeedback() {
+    if (upiCopyTimer) {
+        window.clearTimeout(upiCopyTimer);
+        upiCopyTimer = null;
+    }
+
+    const status = $("buyUpiCopyStatus");
+
+    if (status) {
+        status.textContent = "";
+        status.classList.remove("text-red-500");
+        status.classList.add("text-emerald-600");
+    }
+
+    const icon = $("copyBuyUpiIdBtn")?.querySelector("i");
+
+    if (icon) {
+        icon.className = "fa-regular fa-copy";
+    }
+}
+
+async function handleCopyUpiId() {
+    const status = $("buyUpiCopyStatus");
+    const copied = await copyToClipboard(upiId);
+
+    if (status) {
+        status.textContent = copied
+            ? "UPI ID copied!"
+            : "Couldn't copy — select the UPI ID instead.";
+        status.classList.toggle("text-emerald-600", copied);
+        status.classList.toggle("text-red-500", !copied);
+    }
+
+    const icon = $("copyBuyUpiIdBtn")?.querySelector("i");
+
+    if (icon) {
+        icon.className = copied
+            ? "fa-solid fa-check"
+            : "fa-regular fa-copy";
+    }
+
+    if (upiCopyTimer) {
+        window.clearTimeout(upiCopyTimer);
+    }
+
+    upiCopyTimer = window.setTimeout(
+        resetUpiCopyFeedback,
+        2200
+    );
+}
 
 async function openBuyModal(course) {
     const modal = $("buyModal");
@@ -1343,18 +1521,19 @@ async function openBuyModal(course) {
     }
 
     activeCourse = course;
+    resetUpiCopyFeedback();
 
     // Fresh offer snapshot so the checkout shows the price the
     // student actually has to pay right now.
     await loadOffer();
 
     const offerPrice = offerPriceFor(course);
+    const payableAmount = offerPrice != null
+        ? offerPrice
+        : Number(course.price_inr) || 0;
 
     $("buyCourseTitle").textContent = course.title;
-    $("buyCoursePrice").textContent = offerPrice != null
-        ? formatAmount(offerPrice)
-        : formatPrice(course.price_inr);
-    $("buyUpiIdText").textContent = upiId;
+    $("buyCoursePrice").textContent = formatAmount(payableAmount);
 
     // 1+1 second-course offer breakdown on the payment step.
     const originalSpan = $("buyCourseOriginalPrice");
@@ -1386,15 +1565,10 @@ async function openBuyModal(course) {
         ratingBox.innerHTML = ratingBadgeHtml(course);
     }
 
-    const upiLink = $("buyUpiLink");
-
-    // The UPI deep link pre-fills the final payable amount -
-    // discounted while the 1+1 offer applies.
-    upiLink.href = buildUpiLink({
-        upiId,
-        amount: offerPrice ?? course.price_inr,
-        title: course.title
-    });
+    // Build the dynamic UPI payment request from the course title,
+    // final payable amount and current admin UPI ID. This also
+    // regenerates the QR code every time the checkout opens.
+    updateCheckoutPaymentDetails(course, payableAmount);
 
     $("buyUtrInput").value = "";
     coursesMessage("");
@@ -1412,6 +1586,7 @@ function closeBuyModal() {
 
     modal.classList.add("hidden");
     modal.classList.remove("flex");
+    resetUpiCopyFeedback();
     activeCourse = null;
 }
 
@@ -1467,6 +1642,7 @@ function setupBuyModalEvents() {
 
     $("closeBuyModalBtn")?.addEventListener("click", closeBuyModal);
     $("cancelBuyBtn")?.addEventListener("click", closeBuyModal);
+    $("copyBuyUpiIdBtn")?.addEventListener("click", handleCopyUpiId);
 
     modal.addEventListener("click", event => {
         if (event.target === modal) {
@@ -2503,6 +2679,15 @@ export function setupCommerceEvents() {
 
         getUpiId().then(value => {
             upiId = value;
+
+            // If the checkout opened before site settings finished
+            // loading, refresh the receiver, deep link and QR.
+            if (
+                activeCourse &&
+                !$("buyModal")?.classList.contains("hidden")
+            ) {
+                updateCheckoutPaymentDetails();
+            }
         }).catch(error => {
             console.error("UPI ID load error:", error);
         });

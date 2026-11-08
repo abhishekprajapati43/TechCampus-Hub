@@ -61,6 +61,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/settings").permitAll()
                         // Public platform rating shown on the homepage
                         .requestMatchers(HttpMethod.GET, "/api/ratings/**").permitAll()
+                        // Public homepage previews (metadata only - never file URLs)
+                        .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
                         // Authentication endpoints
                         .requestMatchers("/api/auth/**").permitAll()
                         // Everything under /api/admin requires the ADMIN role
