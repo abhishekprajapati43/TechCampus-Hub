@@ -49,7 +49,9 @@
     ====================================================== -->
                 <main class="main-area
                md:ml-64
-               min-h-screen">
+               min-h-screen
+               flex
+               flex-col">
                     <div id="pageHeader"></div>
                     <!-- =================================================
              PAGE CONTENT
@@ -57,7 +59,9 @@
                     <div class="p-5
                    md:p-8
                    max-w-[1500px]
-                   mx-auto">
+                   mx-auto
+                   w-full
+                   flex-1">
                         <!-- =================================================
                  WELCOME
             ================================================== -->
@@ -520,6 +524,77 @@
                            gap-2"></div>
                         </section>
                     </div>
+
+                    <!-- =================================================
+             STUDENT FOOTER
+        ================================================== -->
+                    <footer class="site-footer mt-auto">
+                        <div class="max-w-[1500px] mx-auto px-5 md:px-8 py-8">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.4fr_0.7fr_0.7fr_0.8fr] gap-8">
+                                <!-- Brand -->
+                                <div>
+                                    <a href="./index.html" class="inline-flex items-center gap-3">
+                                        <span class="text-logo-icon shrink-0">
+                                            <img src="./assets/logo.png" alt="TechCampus Hub logo">
+                                        </span>
+                                        <span class="min-w-0">
+                                            <span class="block text-lg font-extrabold text-white">TechCampus Hub</span>
+                                            <span class="block text-xs text-blue-200">College Learning Portal</span>
+                                        </span>
+                                    </a>
+                                    <p class="mt-4 text-sm leading-6 text-slate-300">
+                                        Notes, PYQs, TNP resources, syllabus and timetables
+                                        &mdash; all in one secure student portal.
+                                    </p>
+                                    <p class="mt-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-blue-200">
+                                        <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+                                        Secure &amp; student-first
+                                    </p>
+                                </div>
+
+                                <!-- Student portal -->
+                                <div>
+                                    <p class="footer-heading">Student Portal</p>
+                                    <ul class="mt-4 space-y-2.5">
+                                        <li><a href="./dashboard.html" class="footer-link">Dashboard</a></li>
+                                        <li><a href="./courses.html" class="footer-link">My Courses</a></li>
+                                        <li><a href="./syllabus.html" class="footer-link">Syllabus</a></li>
+                                        <li><a href="./favorites.html" class="footer-link">Favorites</a></li>
+                                    </ul>
+                                </div>
+
+                                <!-- Resources -->
+                                <div>
+                                    <p class="footer-heading">Resources</p>
+                                    <ul class="mt-4 space-y-2.5">
+                                        <li><a href="./dashboard.html?category=notes" class="footer-link">Notes</a></li>
+                                        <li><a href="./dashboard.html?category=pyq" class="footer-link">PYQ</a></li>
+                                        <li><a href="./dashboard.html?category=tnp" class="footer-link">TNP</a></li>
+                                        <li><a href="./dashboard.html?category=timetable" class="footer-link">Timetable</a></li>
+                                    </ul>
+                                </div>
+
+                                <!-- Support -->
+                                <div>
+                                    <p class="footer-heading">Support</p>
+                                    <ul class="mt-4 space-y-2.5">
+                                        <li><a href="./help-center.html" class="footer-link">Help Center</a></li>
+                                        <li><a href="./about.html" class="footer-link">About Us</a></li>
+                                        <li><a href="./feedback.html" class="footer-link">Send Feedback</a></li>
+                                        <li><a href="./index.html#contact" class="footer-link">Contact</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="mt-7 border-t border-white/10 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left text-xs leading-5 text-slate-400">
+                                <p>&copy; 2026 TechCampus Hub. All Rights Reserved.</p>
+                                <p class="inline-flex items-center gap-2">
+                                    <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                                    Your learning data stays private
+                                </p>
+                            </div>
+                        </div>
+                    </footer>
                 </main>
             </div>
         <script src="./js/env.js"></script>

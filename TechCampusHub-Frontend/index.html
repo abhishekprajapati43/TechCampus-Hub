@@ -60,15 +60,21 @@
                         </p>
                     </div>
                 </a>
-                <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+                <nav class="hidden md:flex items-center gap-4 lg:gap-6 text-sm font-semibold text-slate-600">
+                    <a href="#home" class="hover:text-blue-600 transition">
+                        Home
+                    </a>
                     <a href="#courses" class="hover:text-blue-600 transition">
                         Courses
                     </a>
-                    <a href="#how" class="hover:text-blue-600 transition">
-                        How it works
-                    </a>
-                    <a href="#features" class="hover:text-blue-600 transition">
+                    <a href="#resources" class="hover:text-blue-600 transition">
                         Resources
+                    </a>
+                    <a href="#about" class="hover:text-blue-600 transition">
+                        About
+                    </a>
+                    <a href="#contact" class="hover:text-blue-600 transition">
+                        Contact
                     </a>
                 </nav>
                 <div class="flex items-center gap-2 sm:gap-3 shrink-0">
@@ -116,12 +122,12 @@
             <!-- =====================================================
              HERO
         ====================================================== -->
-            <section class="auth-bg">
-                <div class="max-w-6xl mx-auto px-5 py-5 md:py-6">
+            <section id="home" class="auth-bg">
+                <div class="max-w-6xl mx-auto px-5 py-4 md:py-5">
                     <!-- One premium container: both columns live inside this
                          single rounded card (left content ~55%, right panel ~45%). -->
-                    <div class="grid md:grid-cols-[55fr_45fr] items-center gap-7 lg:gap-10
-                                rounded-3xl border border-slate-100 bg-white p-5 md:p-6 lg:p-7
+                    <div class="grid md:grid-cols-[55fr_45fr] items-center gap-5 lg:gap-8
+                                rounded-3xl border border-slate-100 bg-white p-4 md:p-5 lg:p-6
                                 shadow-[0_30px_60px_-30px_rgba(16,42,86,0.35)]">
                         <!-- ===== LEFT: badge, heading, description, CTAs, quick icons ===== -->
                         <div>
@@ -141,7 +147,7 @@
                                 resources, previous year papers and exam timetables.
                                 Buy a course bundle to unlock every note inside it.
                             </p>
-                            <div class="mt-5 flex flex-wrap gap-3">
+                            <div class="mt-4 flex flex-wrap gap-3">
                                 <a href="#courses" class="inline-flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-base font-bold px-7 py-4 transition shadow-lg shadow-blue-600/30">
                                     Browse courses
                                     <i class="fa-solid fa-arrow-right"></i>
@@ -152,7 +158,7 @@
                             </div>
                             <!-- Quick feature icons: Study Notes, TNP, PYQ Papers,
                                  Timetable, Syllabus (wraps on narrow screens) -->
-                            <div class="mt-5 flex flex-wrap gap-2">
+                            <div class="mt-4 flex flex-wrap gap-2">
                                 <span class="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-100 px-3 py-2 text-xs font-bold text-slate-700">
                                     <i class="fa-solid fa-book-open text-blue-600" aria-hidden="true"></i>
                                     Study Notes
@@ -213,9 +219,115 @@
             </section>
 
             <!-- =====================================================
+             ABOUT TECHCAMPUS HUB
+        ====================================================== -->
+            <section id="about" class="max-w-6xl mx-auto px-5 py-9 md:py-11 scroll-mt-24">
+                <div class="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-6 lg:gap-9 items-center">
+                    <div>
+                        <p class="text-xs font-extrabold uppercase tracking-widest text-blue-600">
+                            About the platform
+                        </p>
+                        <h2 class="mt-2.5 text-3xl md:text-4xl font-extrabold text-slate-900">
+                            About TechCampus Hub
+                        </h2>
+                        <p class="mt-4 text-slate-600 leading-7">
+                            TechCampus Hub is a modern College Learning Portal designed to
+                            help students access academic resources from a single platform.
+                            Students can securely access Notes, PYQs, TNP materials, Syllabus,
+                            Timetables, and premium course content. The platform provides an
+                            organized semester-wise learning experience for BCA, MCA, and
+                            B.Tech students with secure in-app PDF viewing and an easy course
+                            purchase system.
+                        </p>
+
+                        <div class="mt-5 flex flex-wrap gap-2">
+                            <span class="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-100 px-3 py-1.5 text-xs font-bold text-blue-700">
+                                <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
+                                BCA
+                            </span>
+                            <span class="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-100 px-3 py-1.5 text-xs font-bold text-blue-700">
+                                <i class="fa-solid fa-database" aria-hidden="true"></i>
+                                MCA
+                            </span>
+                            <span class="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-100 px-3 py-1.5 text-xs font-bold text-blue-700">
+                                <i class="fa-solid fa-gears" aria-hidden="true"></i>
+                                B.Tech
+                            </span>
+                            <span class="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-100 px-3 py-1.5 text-xs font-bold text-blue-700">
+                                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+                                Secure PDF viewer
+                            </span>
+                        </div>
+
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <a href="#why-choose"
+                               class="inline-flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-3 transition shadow-lg shadow-blue-600/20">
+                                Why choose us
+                                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                            </a>
+                            <a href="./about.html"
+                               class="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white hover:border-blue-300 hover:bg-blue-50 text-slate-700 font-bold px-5 py-3 transition">
+                                Learn more
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="card p-5 sm:p-6">
+                        <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400">
+                            Everything in one place
+                        </p>
+                        <ul class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm font-semibold text-slate-700">
+                            <li class="flex items-center gap-2.5">
+                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                                    <i class="fa-solid fa-book-open" aria-hidden="true"></i>
+                                </span>
+                                Notes
+                            </li>
+                            <li class="flex items-center gap-2.5">
+                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+                                    <i class="fa-solid fa-file-circle-question" aria-hidden="true"></i>
+                                </span>
+                                PYQ Papers
+                            </li>
+                            <li class="flex items-center gap-2.5">
+                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                                    <i class="fa-solid fa-briefcase" aria-hidden="true"></i>
+                                </span>
+                                TNP Resources
+                            </li>
+                            <li class="flex items-center gap-2.5">
+                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+                                    <i class="fa-solid fa-book" aria-hidden="true"></i>
+                                </span>
+                                Syllabus
+                            </li>
+                            <li class="flex items-center gap-2.5">
+                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-50 text-violet-600">
+                                    <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+                                </span>
+                                Timetables
+                            </li>
+                            <li class="flex items-center gap-2.5">
+                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-rose-50 text-rose-600">
+                                    <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+                                </span>
+                                Premium Courses
+                            </li>
+                        </ul>
+                        <div class="mt-5 rounded-xl bg-blue-50/70 border border-blue-100 px-4 py-3">
+                            <p class="text-xs leading-5 text-slate-600">
+                                <i class="fa-solid fa-circle-info mr-1 text-blue-600" aria-hidden="true"></i>
+                                One account, one place for your entire semester.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =====================================================
              COURSES
         ====================================================== -->
-            <section id="courses" class="max-w-6xl mx-auto px-5 py-14 md:py-16">
+            <section id="courses" class="max-w-6xl mx-auto px-5 py-9 md:py-11 scroll-mt-24">
                 <div class="text-center max-w-2xl mx-auto">
                     <p class="text-xs font-extrabold uppercase tracking-widest text-blue-600">
                         Courses
@@ -232,7 +344,7 @@
                         <!-- Rendered by js/home.js -->
                     </div>
                 </div>
-                <div id="homeCourseGrid" class="mt-8 grid grid-cols-1 min-[768px]:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch auto-rows-fr">
+                <div id="homeCourseGrid" class="mt-6 grid grid-cols-1 min-[768px]:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch auto-rows-fr">
                     <!-- Rendered by js/home.js -->
                 </div>
                 <p id="homeCourseEmpty" class="hidden mt-6 text-center text-slate-500">
@@ -247,8 +359,8 @@
             <!-- =====================================================
              STUDY RESOURCE PREVIEWS (login required to open)
         ====================================================== -->
-            <section id="resources" class="bg-white border-y border-slate-200">
-                <div class="max-w-6xl mx-auto px-5 py-14 md:py-16">
+            <section id="resources" class="bg-white border-y border-slate-200 scroll-mt-24">
+                <div class="max-w-6xl mx-auto px-5 py-9 md:py-11">
                     <div class="text-center max-w-2xl mx-auto">
                         <p class="text-xs font-extrabold uppercase tracking-widest text-blue-600">
                             Study Resources
@@ -263,7 +375,7 @@
                         </p>
                     </div>
 
-                    <div id="homeResourceSections" class="mt-8 space-y-9">
+                    <div id="homeResourceSections" class="mt-6 space-y-7">
                         <!-- NOTES -->
                         <div class="home-resource-block" data-resource-section="notes">
                             <div class="flex flex-wrap items-center justify-between gap-3">
@@ -365,205 +477,523 @@
             </section>
 
             <!-- =====================================================
-             HOW IT WORKS
+             WHY CHOOSE TECHCAMPUS HUB
         ====================================================== -->
-            <section id="how" class="bg-white border-y border-slate-200">
-                <div class="max-w-6xl mx-auto px-5 py-14 md:py-16">
+            <section id="why-choose" class="bg-white border-y border-slate-200 scroll-mt-24">
+                <div class="max-w-6xl mx-auto px-5 py-9 md:py-11">
                     <div class="text-center max-w-2xl mx-auto">
                         <p class="text-xs font-extrabold uppercase tracking-widest text-blue-600">
-                            How it works
+                            Why Choose TechCampus Hub
                         </p>
                         <h2 class="mt-2.5 text-3xl md:text-4xl font-extrabold text-slate-900">
-                            From signup to unlocked notes in four steps
+                            Everything you need to study smarter
                         </h2>
+                        <p class="mt-3.5 text-slate-600">
+                            A complete learning workspace built around the way students
+                            actually prepare for classes, exams and placements.
+                        </p>
                     </div>
-                    <div class="mt-8 grid grid-cols-1 min-[768px]:grid-cols-2 lg:grid-cols-4 gap-5 auto-rows-fr">
-                        <div class="how-step card p-6">
-                            <span class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg">
-                                <i class="fa-solid fa-user-plus"></i>
+
+                    <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 auto-rows-fr">
+                        <div class="card flex h-full flex-col p-4 hover:-translate-y-1 transition">
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
                             </span>
-                            <p class="mt-4 text-[11px] font-extrabold uppercase tracking-widest text-blue-600">Step 1</p>
-                            <h3 class="mt-1 font-extrabold text-slate-900">Create a free account</h3>
-                            <p class="mt-2 text-sm text-slate-500">Sign up with your college email and course details.</p>
-                            <span class="how-step-connector" aria-hidden="true">
-                                <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                            </span>
+                            <h3 class="mt-3 text-sm font-extrabold text-slate-900">Secure PDF Viewer</h3>
+                            <p class="mt-1.5 text-xs leading-5 text-slate-500">
+                                Read every document inside a protected in-app viewer.
+                            </p>
                         </div>
-                        <div class="how-step card p-6">
-                            <span class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg">
-                                <i class="fa-solid fa-magnifying-glass"></i>
+                        <div class="card flex h-full flex-col p-4 hover:-translate-y-1 transition">
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+                                <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
                             </span>
-                            <p class="mt-4 text-[11px] font-extrabold uppercase tracking-widest text-blue-600">Step 2</p>
-                            <h3 class="mt-1 font-extrabold text-slate-900">Browse free resources</h3>
-                            <p class="mt-2 text-sm text-slate-500">Free notes, TNP resources and timetables open up after login.</p>
-                            <span class="how-step-connector" aria-hidden="true">
-                                <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                            </span>
+                            <h3 class="mt-3 text-sm font-extrabold text-slate-900">Semester-wise Notes</h3>
+                            <p class="mt-1.5 text-xs leading-5 text-slate-500">
+                                Subject notes organised semester by semester.
+                            </p>
                         </div>
-                        <div class="how-step card p-6">
-                            <span class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg">
-                                <i class="fa-solid fa-wallet"></i>
+                        <div class="card flex h-full flex-col p-4 hover:-translate-y-1 transition">
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+                                <i class="fa-solid fa-file-circle-question" aria-hidden="true"></i>
                             </span>
-                            <p class="mt-4 text-[11px] font-extrabold uppercase tracking-widest text-blue-600">Step 3</p>
-                            <h3 class="mt-1 font-extrabold text-slate-900">Pay for a course</h3>
-                            <p class="mt-2 text-sm text-slate-500">Pay the course price with any UPI app and submit the transaction reference.</p>
-                            <span class="how-step-connector" aria-hidden="true">
-                                <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                            </span>
+                            <h3 class="mt-3 text-sm font-extrabold text-slate-900">Previous Year Question Papers</h3>
+                            <p class="mt-1.5 text-xs leading-5 text-slate-500">
+                                Practise with real PYQs sorted by course and year.
+                            </p>
                         </div>
-                        <div class="how-step card p-6">
-                            <span class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg">
-                                <i class="fa-solid fa-unlock"></i>
+                        <div class="card flex h-full flex-col p-4 hover:-translate-y-1 transition">
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                                <i class="fa-solid fa-briefcase" aria-hidden="true"></i>
                             </span>
-                            <p class="mt-4 text-[11px] font-extrabold uppercase tracking-widest text-blue-600">Step 4</p>
-                            <h3 class="mt-1 font-extrabold text-slate-900">Unlock all notes</h3>
-                            <p class="mt-2 text-sm text-slate-500">Admin approves the payment and every note in the course opens for you.</p>
+                            <h3 class="mt-3 text-sm font-extrabold text-slate-900">TNP Resources</h3>
+                            <p class="mt-1.5 text-xs leading-5 text-slate-500">
+                                Training and placement material for interviews and aptitude.
+                            </p>
+                        </div>
+                        <div class="card flex h-full flex-col p-4 hover:-translate-y-1 transition">
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+                                <i class="fa-solid fa-list-check" aria-hidden="true"></i>
+                            </span>
+                            <h3 class="mt-3 text-sm font-extrabold text-slate-900">Syllabus</h3>
+                            <p class="mt-1.5 text-xs leading-5 text-slate-500">
+                                Up-to-date syllabus for every supported programme.
+                            </p>
+                        </div>
+                        <div class="card flex h-full flex-col p-4 hover:-translate-y-1 transition">
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-600">
+                                <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+                            </span>
+                            <h3 class="mt-3 text-sm font-extrabold text-slate-900">Exam Timetable</h3>
+                            <p class="mt-1.5 text-xs leading-5 text-slate-500">
+                                Check exam schedules as soon as they are released.
+                            </p>
+                        </div>
+                        <div class="card flex h-full flex-col p-4 hover:-translate-y-1 transition">
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-rose-600">
+                                <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+                            </span>
+                            <h3 class="mt-3 text-sm font-extrabold text-slate-900">Course Purchase</h3>
+                            <p class="mt-1.5 text-xs leading-5 text-slate-500">
+                                Buy a bundle once with UPI and unlock all its notes.
+                            </p>
+                        </div>
+                        <div class="card flex h-full flex-col p-4 hover:-translate-y-1 transition">
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
+                                <i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i>
+                            </span>
+                            <h3 class="mt-3 text-sm font-extrabold text-slate-900">Mobile Friendly</h3>
+                            <p class="mt-1.5 text-xs leading-5 text-slate-500">
+                                Study comfortably on any phone, tablet or laptop.
+                            </p>
+                        </div>
+                        <div class="card flex h-full flex-col p-4 hover:-translate-y-1 transition">
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600">
+                                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                            </span>
+                            <h3 class="mt-3 text-sm font-extrabold text-slate-900">Fast Search</h3>
+                            <p class="mt-1.5 text-xs leading-5 text-slate-500">
+                                Find notes, papers and resources in seconds.
+                            </p>
+                        </div>
+                        <div class="card flex h-full flex-col p-4 hover:-translate-y-1 transition">
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-fuchsia-50 text-fuchsia-600">
+                                <i class="fa-solid fa-laptop-code" aria-hidden="true"></i>
+                            </span>
+                            <h3 class="mt-3 text-sm font-extrabold text-slate-900">Responsive Design</h3>
+                            <p class="mt-1.5 text-xs leading-5 text-slate-500">
+                                A clean layout that adapts to every screen size.
+                            </p>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- =====================================================
-             RESOURCES / FEATURES
+             MISSION & VISION
         ====================================================== -->
-            <section id="features" class="max-w-6xl mx-auto px-5 py-14 md:py-16">
+            <section id="mission-vision" class="max-w-6xl mx-auto px-5 py-9 md:py-11 scroll-mt-24">
                 <div class="text-center max-w-2xl mx-auto">
                     <p class="text-xs font-extrabold uppercase tracking-widest text-blue-600">
-                        Resources
+                        What drives us
                     </p>
                     <h2 class="mt-2.5 text-3xl md:text-4xl font-extrabold text-slate-900">
-                        Everything the portal contains
+                        Our Mission &amp; Vision
                     </h2>
                 </div>
-                <div class="mt-8 grid grid-cols-1 min-[768px]:grid-cols-2 lg:grid-cols-4 gap-5 auto-rows-fr">
-                    <div class="card p-6">
-                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
-                            <i class="fa-solid fa-book-open"></i>
-                        </div>
-                        <h3 class="mt-4 font-extrabold text-slate-900">Study Notes</h3>
-                        <p class="mt-2 text-sm text-slate-500">Subject-wise unit notes for MCA, B.Tech and BCA, organized by semester.</p>
+
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5 auto-rows-fr">
+                    <div class="card flex h-full flex-col p-5 sm:p-6">
+                        <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-xl text-white"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </span>
+                        <h3 class="mt-4 text-xl font-extrabold text-slate-900">Our Mission</h3>
+                        <p class="mt-3 text-sm leading-7 text-slate-600">
+                            Provide quality digital learning resources in one place to make
+                            education simple, organized, and accessible for every student.
+                        </p>
                     </div>
-                    <div class="card p-6">
-                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
-                            <i class="fa-solid fa-briefcase"></i>
-                        </div>
-                        <h3 class="mt-4 font-extrabold text-slate-900">TNP Resources</h3>
-                        <p class="mt-2 text-sm text-slate-500">Training &amp; placement material, aptitude and interview resources.</p>
-                    </div>
-                    <div class="card p-6">
-                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
-                            <i class="fa-solid fa-file-circle-question"></i>
-                        </div>
-                        <h3 class="mt-4 font-extrabold text-slate-900">PYQ Papers</h3>
-                        <p class="mt-2 text-sm text-slate-500">Previous year question papers sorted by course, year and semester.</p>
-                    </div>
-                    <div class="card p-6">
-                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
-                            <i class="fa-solid fa-calendar-days"></i>
-                        </div>
-                        <h3 class="mt-4 font-extrabold text-slate-900">Exam Timetables</h3>
-                        <p class="mt-2 text-sm text-slate-500">Official exam schedules the moment they are released.</p>
+
+                    <div class="card flex h-full flex-col p-5 sm:p-6">
+                        <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-500 text-xl text-white"
+                              aria-hidden="true">
+                            <i class="fa-solid fa-eye"></i>
+                        </span>
+                        <h3 class="mt-4 text-xl font-extrabold text-slate-900">Our Vision</h3>
+                        <p class="mt-3 text-sm leading-7 text-slate-600">
+                            Build a smart digital campus where students can learn, access
+                            resources, and prepare for placements from a single platform.
+                        </p>
                     </div>
                 </div>
             </section>
 
             <!-- =====================================================
-             CTA BANNER
+             STATISTICS
         ====================================================== -->
-            <section class="max-w-6xl mx-auto px-5 pb-14 md:pb-16">
-                <div class="rounded-3xl p-7 md:p-10 text-center text-white"
+            <section id="stats" class="max-w-6xl mx-auto px-5 pb-9 md:pb-11 scroll-mt-24"
+                     aria-labelledby="statsHeading">
+                <div class="relative overflow-hidden rounded-3xl px-5 py-8 sm:px-8 md:px-10 md:py-9 text-white"
                      style="background: linear-gradient(135deg, #102a56 0%, #173d78 55%, #2563eb 100%);">
-                    <h2 class="text-3xl md:text-4xl font-extrabold">
-                        Ready to start learning?
-                    </h2>
-                    <p class="mt-3 text-blue-100 max-w-xl mx-auto">
-                        Create your account in under a minute and get instant
-                        access to free notes and resources.
-                    </p>
-                    <div class="mt-6 flex flex-wrap justify-center gap-3">
-                        <a href="./login.html" class="rounded-xl bg-white text-blue-700 font-bold px-6 py-3.5 hover:bg-blue-50 transition">
-                            Create free account
-                        </a>
-                        <a href="#courses" class="rounded-xl border border-white/40 text-white font-bold px-6 py-3.5 hover:bg-white/10 transition">
-                            View courses
-                        </a>
+                    <div class="text-center max-w-2xl mx-auto">
+                        <p class="text-xs font-extrabold uppercase tracking-widest text-blue-200">
+                            Statistics
+                        </p>
+                        <h2 id="statsHeading" class="mt-2 text-2xl md:text-3xl font-extrabold">
+                            TechCampus Hub in numbers
+                        </h2>
+                        <p class="mt-3 text-sm leading-6 text-blue-100">
+                            A growing digital campus trusted by students and supported by
+                            dedicated faculty across departments.
+                        </p>
+                    </div>
+
+                    <div class="mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                        <div class="rounded-2xl border border-white/15 bg-white/10 p-4 text-center backdrop-blur">
+                            <span class="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 text-blue-100"
+                                  aria-hidden="true">
+                                <i class="fa-solid fa-user-graduate"></i>
+                            </span>
+                            <p class="counter-value mt-3 text-3xl md:text-4xl font-extrabold"
+                               data-counter-to="10000" data-counter-suffix="+">10,000+</p>
+                            <p class="mt-1 text-[11px] font-bold uppercase tracking-wider text-blue-100">
+                                Total Students
+                            </p>
+                        </div>
+
+                        <div class="rounded-2xl border border-white/15 bg-white/10 p-4 text-center backdrop-blur">
+                            <span class="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 text-blue-100"
+                                  aria-hidden="true">
+                                <i class="fa-solid fa-file-lines"></i>
+                            </span>
+                            <p class="counter-value mt-3 text-3xl md:text-4xl font-extrabold"
+                               data-counter-to="5000" data-counter-suffix="+">5,000+</p>
+                            <p class="mt-1 text-[11px] font-bold uppercase tracking-wider text-blue-100">
+                                Notes Available
+                            </p>
+                        </div>
+
+                        <div class="rounded-2xl border border-white/15 bg-white/10 p-4 text-center backdrop-blur">
+                            <span class="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 text-blue-100"
+                                  aria-hidden="true">
+                                <i class="fa-solid fa-book-open"></i>
+                            </span>
+                            <p class="counter-value mt-3 text-3xl md:text-4xl font-extrabold"
+                               data-counter-to="30" data-counter-suffix="+">30+</p>
+                            <p class="mt-1 text-[11px] font-bold uppercase tracking-wider text-blue-100">
+                                Courses
+                            </p>
+                        </div>
+
+                        <div class="rounded-2xl border border-white/15 bg-white/10 p-4 text-center backdrop-blur">
+                            <span class="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 text-blue-100"
+                                  aria-hidden="true">
+                                <i class="fa-solid fa-user-tie"></i>
+                            </span>
+                            <p class="counter-value mt-3 text-3xl md:text-4xl font-extrabold"
+                               data-counter-to="100" data-counter-suffix="+">100+</p>
+                            <p class="mt-1 text-[11px] font-bold uppercase tracking-wider text-blue-100">
+                                Faculty Members
+                            </p>
+                        </div>
+
+                        <div class="rounded-2xl border border-white/15 bg-white/10 p-4 text-center backdrop-blur">
+                            <span class="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 text-blue-100"
+                                  aria-hidden="true">
+                                <i class="fa-solid fa-building-columns"></i>
+                            </span>
+                            <p class="counter-value mt-3 text-3xl md:text-4xl font-extrabold"
+                               data-counter-to="12" data-counter-suffix="+">12+</p>
+                            <p class="mt-1 text-[11px] font-bold uppercase tracking-wider text-blue-100">
+                                Departments
+                            </p>
+                        </div>
                     </div>
                 </div>
             </section>
+
+            <!-- =====================================================
+             STUDENT REVIEWS
+        ====================================================== -->
+            <section id="reviews" class="bg-white border-y border-slate-200 scroll-mt-24">
+                <div class="max-w-6xl mx-auto px-5 py-9 md:py-11">
+                    <div class="text-center max-w-2xl mx-auto">
+                        <p class="text-xs font-extrabold uppercase tracking-widest text-blue-600">
+                            Student Reviews
+                        </p>
+                        <h2 class="mt-2.5 text-3xl md:text-4xl font-extrabold text-slate-900">
+                            Loved by students across every semester
+                        </h2>
+                        <p class="mt-3.5 text-slate-600">
+                            Real feedback from students who use TechCampus Hub for their
+                            notes, exam preparation and placement readiness.
+                        </p>
+                        <div class="mt-5 inline-flex items-center gap-2 rounded-full bg-amber-50 border border-amber-200 px-4 py-1.5 text-sm font-extrabold text-amber-700">
+                            <i class="fa-solid fa-star text-amber-400" aria-hidden="true"></i>
+                            4.9/5 average rating
+                            <span class="font-semibold text-amber-600">from 10,000+ students</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr">
+                        <figure class="card flex h-full flex-col p-5">
+                            <div class="flex items-center gap-1 text-amber-400" aria-label="Rated 5 out of 5">
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                            </div>
+                            <blockquote class="mt-4 flex-1 text-sm leading-7 text-slate-600">
+                                The semester-wise notes are so well organised that I no
+                                longer waste time hunting through chat groups. Everything I
+                                need is one search away.
+                            </blockquote>
+                            <figcaption class="mt-5 flex items-center gap-3 border-t border-slate-100 pt-4">
+                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-extrabold text-blue-700"
+                                      aria-hidden="true">PS</span>
+                                <span class="min-w-0">
+                                    <span class="block text-sm font-extrabold text-slate-900">Priya Sharma</span>
+                                    <span class="block text-xs text-slate-500">BCA · Semester 4</span>
+                                </span>
+                            </figcaption>
+                        </figure>
+
+                        <figure class="card flex h-full flex-col p-5">
+                            <div class="flex items-center gap-1 text-amber-400" aria-label="Rated 5 out of 5">
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                            </div>
+                            <blockquote class="mt-4 flex-1 text-sm leading-7 text-slate-600">
+                                PYQs, syllabus and TNP material in one place made my exam
+                                prep much simpler. The secure PDF viewer is fast even on my
+                                phone.
+                            </blockquote>
+                            <figcaption class="mt-5 flex items-center gap-3 border-t border-slate-100 pt-4">
+                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-sm font-extrabold text-emerald-700"
+                                      aria-hidden="true">RV</span>
+                                <span class="min-w-0">
+                                    <span class="block text-sm font-extrabold text-slate-900">Rahul Verma</span>
+                                    <span class="block text-xs text-slate-500">MCA · Semester 2</span>
+                                </span>
+                            </figcaption>
+                        </figure>
+
+                        <figure class="card flex h-full flex-col p-5">
+                            <div class="flex items-center gap-1 text-amber-400" aria-label="Rated 5 out of 5">
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                            </div>
+                            <blockquote class="mt-4 flex-1 text-sm leading-7 text-slate-600">
+                                I purchased a course bundle and every note unlocked after
+                                approval. The in-app reader is clean, secure and
+                                distraction-free.
+                            </blockquote>
+                            <figcaption class="mt-5 flex items-center gap-3 border-t border-slate-100 pt-4">
+                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-100 text-sm font-extrabold text-violet-700"
+                                      aria-hidden="true">AS</span>
+                                <span class="min-w-0">
+                                    <span class="block text-sm font-extrabold text-slate-900">Ananya Singh</span>
+                                    <span class="block text-xs text-slate-500">B.Tech CSE · Semester 6</span>
+                                </span>
+                            </figcaption>
+                        </figure>
+
+                        <figure class="card flex h-full flex-col p-5">
+                            <div class="flex items-center gap-1 text-amber-400" aria-label="Rated 5 out of 5">
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                            </div>
+                            <blockquote class="mt-4 flex-1 text-sm leading-7 text-slate-600">
+                                The TNP resources helped me prepare for my first internship
+                                interview. The aptitude and HR material are genuinely
+                                useful.
+                            </blockquote>
+                            <figcaption class="mt-5 flex items-center gap-3 border-t border-slate-100 pt-4">
+                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-100 text-sm font-extrabold text-amber-700"
+                                      aria-hidden="true">MK</span>
+                                <span class="min-w-0">
+                                    <span class="block text-sm font-extrabold text-slate-900">Mohit Kumar</span>
+                                    <span class="block text-xs text-slate-500">BCA · Semester 2</span>
+                                </span>
+                            </figcaption>
+                        </figure>
+
+                        <figure class="card flex h-full flex-col p-5">
+                            <div class="flex items-center gap-1 text-amber-400" aria-label="Rated 5 out of 5">
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                            </div>
+                            <blockquote class="mt-4 flex-1 text-sm leading-7 text-slate-600">
+                                Fast search, clean design and no clutter. It finally feels
+                                like a learning portal built for students rather than a file
+                                dump.
+                            </blockquote>
+                            <figcaption class="mt-5 flex items-center gap-3 border-t border-slate-100 pt-4">
+                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-100 text-sm font-extrabold text-rose-700"
+                                      aria-hidden="true">SP</span>
+                                <span class="min-w-0">
+                                    <span class="block text-sm font-extrabold text-slate-900">Sneha Patil</span>
+                                    <span class="block text-xs text-slate-500">MCA · Semester 4</span>
+                                </span>
+                            </figcaption>
+                        </figure>
+
+                        <figure class="card flex h-full flex-col p-5">
+                            <div class="flex items-center gap-1 text-amber-400" aria-label="Rated 5 out of 5">
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                            </div>
+                            <blockquote class="mt-4 flex-1 text-sm leading-7 text-slate-600">
+                                Placement preparation and semester notes on the same
+                                platform is a huge time-saver. Works perfectly on my laptop
+                                and phone.
+                            </blockquote>
+                            <figcaption class="mt-5 flex items-center gap-3 border-t border-slate-100 pt-4">
+                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sky-100 text-sm font-extrabold text-sky-700"
+                                      aria-hidden="true">AM</span>
+                                <span class="min-w-0">
+                                    <span class="block text-sm font-extrabold text-slate-900">Arjun Mehta</span>
+                                    <span class="block text-xs text-slate-500">B.Tech IT · Semester 8</span>
+                                </span>
+                            </figcaption>
+                        </figure>
+                    </div>
+                </div>
+            </section>
+
         </main>
 
         <!-- =====================================================
          FOOTER
     ====================================================== -->
-        <footer class="border-t border-slate-200 bg-white">
-            <div class="max-w-6xl mx-auto px-5 py-7 lg:py-8 grid grid-cols-1 min-[560px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-[1.2fr_1fr_1.5fr_1.05fr_1.1fr] gap-x-6 gap-y-7">
-                <div>
-                    <p class="font-extrabold">TechCampus_Hub</p>
-                    <p class="text-xs text-slate-500">College Learning Portal</p>
-                    <p class="mt-3 text-sm text-slate-500">
-                        Notes, TNP resources, PYQ papers and exam timetables
-                        for MCA, B.Tech &amp; BCA students.
+        <footer id="contact" class="site-footer">
+            <div class="max-w-6xl mx-auto px-5 py-9 lg:py-10 grid grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-[1.55fr_0.9fr_0.9fr_1.1fr_0.95fr_1.55fr] gap-x-6 gap-y-7">
+                <!-- Brand -->
+                <div class="col-span-1 min-[480px]:col-span-2 md:col-span-3 lg:col-span-1">
+                    <a href="./index.html" class="inline-flex items-center gap-3">
+                        <span class="text-logo-icon shrink-0">
+                            <img src="./assets/logo.png" alt="TechCampus Hub logo">
+                        </span>
+                        <span class="min-w-0">
+                            <span class="block text-lg font-extrabold text-white">TechCampus Hub</span>
+                            <span class="block text-xs text-blue-200">College Learning Portal</span>
+                        </span>
+                    </a>
+                    <p class="mt-4 text-sm leading-6 text-slate-300">
+                        A modern learning portal with notes, PYQs, TNP resources,
+                        syllabus and timetables for BCA, MCA and B.Tech students.
+                    </p>
+                    <p class="mt-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-blue-200">
+                        <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+                        Secure &amp; student-first
                     </p>
                 </div>
+
+                <!-- Quick Links -->
                 <div>
-                    <p class="font-extrabold text-sm uppercase tracking-wide text-slate-400">
-                        Portal
-                    </p>
-                    <ul class="mt-3 space-y-1.5 text-sm text-slate-600">
-                        <li><a href="#courses" class="hover:text-blue-600 transition">Courses</a></li>
-                        <li><a href="#how" class="hover:text-blue-600 transition">How it works</a></li>
-                        <li><a href="./login.html" class="hover:text-blue-600 transition">Login / Sign up</a></li>
+                    <p class="footer-heading">Quick Links</p>
+                    <ul class="mt-4 space-y-2.5">
+                        <li><a href="./index.html" class="footer-link">Home</a></li>
+                        <li><a href="#courses" class="footer-link">Courses</a></li>
+                        <li><a href="./dashboard.html?category=notes" class="footer-link">Notes</a></li>
+                        <li><a href="./dashboard.html?category=pyq" class="footer-link">PYQ</a></li>
+                        <li><a href="./dashboard.html?category=tnp" class="footer-link">TNP</a></li>
+                        <li><a href="./syllabus.html" class="footer-link">Syllabus</a></li>
                     </ul>
                 </div>
+
+                <!-- Support -->
                 <div>
-                    <p class="font-extrabold text-sm uppercase tracking-wide text-slate-400">
-                        Support
-                    </p>
-                    <ul class="mt-3 space-y-1.5 text-sm text-slate-600">
-                        <li><a href="./help-center.html" class="hover:text-blue-600 transition">Help Center</a></li>
-                        <li><a href="./help-center.html#contact-information" class="hover:text-blue-600 transition">Contact Us</a></li>
+                    <p class="footer-heading">Support</p>
+                    <ul class="mt-4 space-y-2.5">
+                        <li><a href="./help-center.html" class="footer-link">Help Center</a></li>
+                        <li><a href="./help-center.html#contact-information" class="footer-link">Contact Us</a></li>
+                        <li><a href="./help-center.html" class="footer-link">FAQs</a></li>
                     </ul>
+                </div>
+
+                <!-- Company -->
+                <div>
+                    <p class="footer-heading">Company</p>
+                    <ul class="mt-4 space-y-2.5">
+                        <li><a href="./about.html" class="footer-link">About Us</a></li>
+                        <li><a href="#" class="footer-link">Privacy Policy</a></li>
+                        <li><a href="#" class="footer-link">Terms &amp; Conditions</a></li>
+                        <li><a href="#" class="footer-link">Refund Policy</a></li>
+                        <li><a href="#" class="footer-link">Disclaimer</a></li>
+                    </ul>
+                </div>
+
+                <!-- Community -->
+                <div>
+                    <p class="footer-heading">Community</p>
+                    <ul class="mt-4 space-y-2.5">
+                        <li>
+                            <a href="https://t.me/TechCampus_Hub"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="footer-link">
+                                <i class="fa-brands fa-telegram text-base text-blue-300" aria-hidden="true"></i>
+                                Telegram
+                            </a>
+                        </li>
+                        <li>
+                            <button type="button"
+                                    data-share-trigger
+                                    aria-haspopup="dialog"
+                                    aria-expanded="false"
+                                    class="footer-link">
+                                <i class="fa-solid fa-share-nodes text-base text-blue-300" aria-hidden="true"></i>
+                                Share Website
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <p class="footer-heading">Contact</p>
+                    <p class="mt-4 text-sm leading-6 text-slate-300">
+                        We usually reply within a day.
+                    </p>
 
                     <!-- Clicking the address only copies it - it never
                          opens Gmail or the default mail app. -->
                     <button id="contactEmailBtn"
                             type="button"
-                            class="mt-2.5 inline-flex max-w-full items-center gap-2 text-left
-                                   break-words cursor-pointer rounded-lg px-2 py-1.5
-                                   text-sm font-semibold text-blue-600
-                                   transition-colors hover:bg-blue-50 hover:text-blue-700"
+                            class="mt-3 block max-w-full text-left text-sm font-semibold
+                                   text-blue-300 transition-colors hover:text-white"
                             title="Copy email address">
-                        <i class="fa-solid fa-envelope shrink-0" aria-hidden="true"></i>
+                        <i class="fa-solid fa-envelope mr-1.5" aria-hidden="true"></i>
                         <span>techcampushub2026<wbr>@gmail.com</span>
-                        <i class="fa-regular fa-copy shrink-0 text-xs opacity-60" aria-hidden="true"></i>
+                        <i class="fa-regular fa-copy ml-1.5 text-xs opacity-60" aria-hidden="true"></i>
                     </button>
-                </div>
-                <div>
-                    <p class="font-extrabold text-sm uppercase tracking-wide text-slate-400">
-                        Community
+                    <p class="mt-2 text-xs font-medium text-slate-400">
+                        Click to copy
                     </p>
-                    <ul class="mt-3 space-y-1.5 text-sm text-slate-600">
-                        <li>
-                            <a href="https://t.me/TechCampus_Hub" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition">
-                                <i class="fa-brands fa-telegram mr-2"></i>Telegram channel
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <p class="font-extrabold text-sm uppercase tracking-wide text-slate-400">
-                        Company
-                    </p>
-                    <ul class="mt-3 space-y-1.5 text-sm text-slate-600">
-                        <li><a href="./about.html" class="hover:text-blue-600 transition">About Us</a></li>
-                        <li><a href="#" class="hover:text-blue-600 transition">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-blue-600 transition">Terms &amp; Conditions</a></li>
-                    </ul>
                 </div>
             </div>
-            <div class="border-t border-slate-100 py-4 text-center">
-                <p class="text-xs leading-5 text-slate-400">
-                    © 2026 TechCampus_Hub. All Rights Reserved.
+
+            <div class="border-t border-white/10">
+                <p class="max-w-6xl mx-auto px-5 py-4 text-center text-xs leading-5 text-slate-400">
+                    © 2026 TechCampus Hub. All Rights Reserved.
                 </p>
             </div>
         </footer>

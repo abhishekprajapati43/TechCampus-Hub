@@ -692,46 +692,6 @@
         }
 
         /* =====================================================
-   HOW IT WORKS — STEP CONNECTORS (index.html)
-===================================================== */
-
-        .how-step {
-            position: relative;
-        }
-
-        /*
-         * Dashed link + chevron between the four step cards.
-         * Markup lives inside steps 1–3 only; it renders solely
-         * at lg and up, where all four steps share one row and
-         * the 24px gap (gap-6) sits next to each card.
-         */
-        .how-step-connector {
-            display: none;
-        }
-
-        @media (min-width: 1024px) {
-
-            .how-step-connector {
-                position: absolute;
-                top: 34px;      /* p-6 (24px) + half of the w-10 icon circle */
-                left: 100%;
-                width: 24px;    /* matches the grid gap between the cards */
-                height: 20px;
-                display: flex;
-                align-items: center;
-                justify-content: flex-end;
-                gap: 3px;
-                pointer-events: none;
-            }
-
-            .how-step-connector::before {
-                content: "";
-                flex: 1;
-                border-top: 2px dashed #bfdbfe;
-            }
-        }
-
-        /* =====================================================
            COURSE CHECKOUT — DYNAMIC UPI QR
         ===================================================== */
 
@@ -1232,5 +1192,89 @@
             .share-toast,
             .share-action {
                 transition-duration: .01ms;
+            }
+        }
+
+        /* =====================================================
+           HOMEPAGE STATS COUNTERS
+        ===================================================== */
+
+        .counter-value {
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.02em;
+        }
+
+        /* =====================================================
+           PROFESSIONAL SITE FOOTER (index.html, dashboard.html)
+        ===================================================== */
+
+        .site-footer {
+            background:
+                radial-gradient(circle at 10% 0%,
+                    rgba(37, 99, 235, .22),
+                    transparent 38%),
+                linear-gradient(180deg,
+                    #0b1f40 0%,
+                    #102a56 55%,
+                    #0b1f40 100%);
+
+            color: #cbd5e1;
+        }
+
+        .footer-heading {
+            margin: 0;
+
+            font-size: .72rem;
+            font-weight: 800;
+            line-height: 1.4;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+
+            color: #93c5fd;
+        }
+
+        .footer-link {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+
+            max-width: 100%;
+            padding: 0;
+
+            border: 0;
+            background: transparent;
+
+            color: #cbd5e1;
+            font-size: .875rem;
+            font-weight: 500;
+            line-height: 1.5;
+            text-align: left;
+            text-decoration: none;
+
+            cursor: pointer;
+
+            transition:
+                color .16s ease,
+                transform .16s ease;
+        }
+
+        .footer-link:hover {
+            color: #fff;
+            transform: translateX(2px);
+        }
+
+        .footer-link:focus-visible {
+            outline: 2px solid rgba(147, 197, 253, .75);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .footer-link {
+                transition: none;
+            }
+
+            .footer-link:hover {
+                transform: none;
             }
         }

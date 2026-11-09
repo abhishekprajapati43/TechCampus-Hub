@@ -14,12 +14,12 @@ for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":8080" ^| findstr LISTENING'
 timeout /t 2 >nul
 
 echo Starting Backend...
-start "Backend" cmd /k "cd /d ""D:\TechCampus Hub\TechCampusHub-Backend"" && .\mvnw.cmd spring-boot:run"
+start "Backend" cmd /k "cd /d ""%~dp0TechCampusHub-Backend"" && .\mvnw.cmd spring-boot:run"
 
 timeout /t 12 >nul
 
 echo Starting Frontend...
-start "Frontend" cmd /k "cd /d ""D:\TechCampus Hub\TechCampusHub-Frontend"" && npx live-server --port=5500"
+start "Frontend" cmd /k "cd /d ""%~dp0TechCampusHub-Frontend"" && npx live-server --port=5500"
 
 timeout /t 5 >nul
 

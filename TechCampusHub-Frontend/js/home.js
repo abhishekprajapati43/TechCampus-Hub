@@ -588,6 +588,93 @@ async function updateNavForSession() {
 }
 
 // =====================================================
+// Animated statistics counters
+// =====================================================
+
+function formatCounterValue(value, suffix) {
+    return `${Math.round(value).toLocaleString("en-IN")}${suffix}`;
+}
+
+function animateCounter(element) {
+    const target = Number(element.dataset.counterTo);
+    const suffix = element.dataset.counterSuffix || "";
+
+    if (!Number.isFinite(target)) {
+        return;
+    }
+
+    const duration = 1600;
+    const start = performance.now();
+
+    const step = now => {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+
+        element.textContent = formatCounterValue(target * eased, suffix);
+
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        } else {
+            element.textContent = formatCounterValue(target, suffix);
+        }
+    };
+
+    window.requestAnimationFrame(step);
+}
+
+/**
+ * Counts up each [data-counter-to] value the first time its
+ * statistics tile scrolls into view. Markup already contains the
+ * final value, so no-JS and reduced-motion visitors see it too.
+ */
+function initStatCounters() {
+    const counters = Array.from(
+        document.querySelectorAll("[data-counter-to]")
+    );
+
+    if (!counters.length) {
+        return;
+    }
+
+    const reducedMotion = window.matchMedia?.(
+        "(prefers-reduced-motion: reduce)"
+    )?.matches;
+
+    if (reducedMotion || !("IntersectionObserver" in window)) {
+        counters.forEach(element => {
+            element.textContent = formatCounterValue(
+                Number(element.dataset.counterTo),
+                element.dataset.counterSuffix || ""
+            );
+        });
+        return;
+    }
+
+    counters.forEach(element => {
+        element.textContent = formatCounterValue(
+            0,
+            element.dataset.counterSuffix || ""
+        );
+    });
+
+    const observer = new IntersectionObserver(
+        (entries, currentObserver) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    return;
+                }
+
+                animateCounter(entry.target);
+                currentObserver.unobserve(entry.target);
+            });
+        },
+        { threshold: 0.4 }
+    );
+
+    counters.forEach(element => observer.observe(element));
+}
+
+// =====================================================
 // Homepage footer contact email (copy on click)
 // =====================================================
 
@@ -686,16 +773,58 @@ function initContactEmailCopy() {
     });
 }
 
+/**
+ * Deep links from other public pages (e.g. ./index.html#resources) must
+ * survive the homepage's async catalog/resource rendering: the browser's
+ * native hash jump happens before those cards expand the layout, so land
+ * once more when rendering settles.
+ */
+function landOnCurrentHash(hash) {
+    if (!hash || window.location.hash !== hash) {
+        return;
+    }
+
+    const target = document.getElementById(hash.slice(1));
+
+    if (!target) {
+        return;
+    }
+
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function initHashLanding(pageData, initialHash) {
+    if (!initialHash) {
+        return;
+    }
+
+    window.requestAnimationFrame(() => landOnCurrentHash(initialHash));
+
+    pageData.then(() => {
+        landOnCurrentHash(initialHash);
+
+        // A late font/image/layout shift can move the target a few
+        // pixels, so make one final correction after the page settles.
+        window.setTimeout(() => landOnCurrentHash(initialHash), 500);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+    const initialHash = window.location.hash;
+    const pageData = Promise.allSettled([
+        renderOverallRating(),
+        renderCourseCatalog(),
+        renderHomeResources()
+    ]);
+
     updateNavForSession();
-    renderOverallRating();
-    renderCourseCatalog();
-    renderHomeResources();
+    initStatCounters();
     initContactEmailCopy();
     initShare();
 
     loginGate = initLoginGate();
     initHomeResourceActions();
+    initHashLanding(pageData, initialHash);
 
     // Viewing or buying a course requires an account:
     // guests are redirected to the login page.
