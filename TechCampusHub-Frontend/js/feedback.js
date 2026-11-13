@@ -11,7 +11,6 @@
 // =====================================================
 
 import { $, escapeHtml, formatDate, getIdentity, updateNoticeBox } from "./helpers.js";
-import { currentStudent } from "./state.js";
 import { loadCourses } from "./courses.js";
 import { loadNotes, notes } from "./data.js";
 

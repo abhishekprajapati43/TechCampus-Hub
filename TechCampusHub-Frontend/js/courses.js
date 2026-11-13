@@ -12,7 +12,7 @@
 // =====================================================
 
 import { $, escapeHtml, formatDate, getIdentity, updateNoticeBox } from "./helpers.js";
-import { currentUserRole, currentStudent } from "./state.js";
+import { currentUserRole } from "./state.js";
 
 import {
     apiGet,

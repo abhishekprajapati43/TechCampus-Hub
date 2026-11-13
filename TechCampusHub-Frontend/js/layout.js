@@ -18,8 +18,7 @@ const NAV_ID_BY_PAGE = {
     // so the Dashboard quick link carries the active state.
     faculty: "facultyDashboardNavBtn",
     paymentHistory: "paymentHistoryBtn",
-    certificates: "certificatesBtn",
-    feedback: "feedbackBtn"
+    certificates: "certificatesBtn"
 };
 
 async function fetchPartial(path) {

@@ -38,7 +38,6 @@ import {
     logoutUser,
     handleCategoryChange,
     updateUploadPanel,
-    updateStudentFilters,
     updateTelegramLink
 } from "./ui.js";
 
@@ -1187,8 +1186,6 @@ async function reloadApplicationData() {
     await loadAllData(
         isAdmin()
     );
-
-    updateStudentFilters();
 
     await renderCurrentCategory();
 }

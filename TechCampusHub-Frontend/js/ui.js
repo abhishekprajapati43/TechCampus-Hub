@@ -19,8 +19,6 @@ import {
 
     hideElement,
 
-    setSelectValue,
-
     populateCourses,
 
     populateBranches,
@@ -1181,7 +1179,7 @@ export function updateAdminNavVisibility() {
 //   and the plain Faculty entry are gone.
 // - Administrators keep Dashboard, Courses, Admin Panel
 //   and Logout but lose the Notifications / Favorites /
-//   Certificates / Feedback entries and the student
+//   Certificates entries and the student
 //   Payment History link (payment approval and records
 //   live in the admin panel's Payments module; the
 //   payment-history.html page itself still works).
@@ -1206,7 +1204,6 @@ const ADMIN_HIDDEN_NAV_LINKS = [
     // syllabus inside their own dashboards.
     "syllabusBtn",
     "certificatesBtn",
-    "feedbackBtn",
     // Payment History is a student-facing store page;
     // admins approve and review payments inside
     // admin.html#payments instead.
@@ -1292,410 +1289,6 @@ export function updateTelegramNavVisibility() {
 
 
 
-
-// =====================================================
-
-// Update Student Filters
-
-// =====================================================
-
-
-
-export function updateStudentFilters() {
-
-    if (isAdminRole()) {
-
-        return;
-
-    }
-
-
-
-    const student =
-
-        currentStudent;
-
-
-
-    if (!student) {
-
-        return;
-
-    }
-
-
-
-    // -------------------------------------------------
-
-    // Notes
-
-    // -------------------------------------------------
-
-
-
-    setSelectValue(
-
-        $("searchCourse"),
-
-        student.course
-
-    );
-
-
-
-    setSelectValue(
-
-        $("searchBranch"),
-
-        student.branch
-
-    );
-
-
-
-    // Student Year is NOT selected/used.
-
-    const searchYear =
-
-        $("searchYear");
-
-
-
-    if (searchYear) {
-
-        searchYear.value = "";
-
-    }
-
-
-
-    // -------------------------------------------------
-
-    // PYQ
-
-    // -------------------------------------------------
-
-
-
-    setSelectValue(
-
-        $("pyqSearchCourse"),
-
-        student.course
-
-    );
-
-
-
-    const pyqYear =
-
-        $("pyqSearchYear");
-
-
-
-    if (pyqYear) {
-
-        pyqYear.value = "";
-
-    }
-
-
-
-    // -------------------------------------------------
-
-    // Timetable
-
-    // -------------------------------------------------
-
-
-
-    setSelectValue(
-
-        $("timetableSearchCourse"),
-
-        student.course
-
-    );
-
-}
-
-
-
-
-
-// =====================================================
-
-// Update Student Profile Filter Options
-
-// =====================================================
-
-
-
-function populateStudentProfileFilters() {
-
-    const student =
-
-        currentStudent;
-
-
-
-    if (!student) {
-
-        return;
-
-    }
-
-
-
-    // -------------------------------------------------
-
-    // Notes
-
-    // -------------------------------------------------
-
-
-
-    const searchCourse =
-
-        $("searchCourse");
-
-
-
-    const searchBranch =
-
-        $("searchBranch");
-
-
-
-    if (searchCourse) {
-
-        searchCourse.value =
-
-            student.course;
-
-    }
-
-
-
-    if (searchBranch) {
-
-        searchBranch.value =
-
-            student.branch;
-
-    }
-
-
-
-    // -------------------------------------------------
-
-    // PYQ
-
-    // -------------------------------------------------
-
-
-
-    const pyqCourse =
-
-        $("pyqSearchCourse");
-
-
-
-    if (pyqCourse) {
-
-        pyqCourse.value =
-
-            student.course;
-
-    }
-
-
-
-    // -------------------------------------------------
-
-    // Timetable
-
-    // -------------------------------------------------
-
-
-
-    const timetableCourse =
-
-        $("timetableSearchCourse");
-
-
-
-    if (timetableCourse) {
-
-        timetableCourse.value =
-
-            student.course;
-
-    }
-
-}
-
-
-
-
-
-// =====================================================
-
-// Update Role Based Filter UI
-
-// =====================================================
-
-
-
-export function updateStudentRoleUI() {
-
-    const student =
-
-        currentStudent;
-
-
-
-    const admin =
-
-        isAdminRole();
-
-
-
-    // -------------------------------------------------
-
-    // Notes
-
-    // -------------------------------------------------
-
-
-
-    const notesCourse =
-
-        $("searchCourse");
-
-
-
-    const notesBranch =
-
-        $("searchBranch");
-
-
-
-    const notesYear =
-
-        $("searchYear");
-
-
-
-    if (notesCourse) {
-
-        notesCourse.disabled =
-
-            !admin;
-
-    }
-
-
-
-    if (notesBranch) {
-
-        notesBranch.disabled =
-
-            !admin;
-
-    }
-
-
-
-    if (notesYear) {
-
-        notesYear.disabled =
-
-            !admin;
-
-    }
-
-
-
-    // -------------------------------------------------
-
-    // PYQ
-
-    // -------------------------------------------------
-
-
-
-    const pyqCourse =
-
-        $("pyqSearchCourse");
-
-
-
-    const pyqYear =
-
-        $("pyqSearchYear");
-
-
-
-    if (pyqCourse) {
-
-        pyqCourse.disabled =
-
-            !admin;
-
-    }
-
-
-
-    if (pyqYear) {
-
-        pyqYear.disabled =
-
-            !admin;
-
-    }
-
-
-
-    // -------------------------------------------------
-
-    // Timetable
-
-    // -------------------------------------------------
-
-
-
-    const timetableCourse =
-
-        $("timetableSearchCourse");
-
-
-
-    if (timetableCourse) {
-
-        timetableCourse.disabled =
-
-            !admin;
-
-    }
-
-
-
-    // -------------------------------------------------
-
-    // Student automatic values
-
-    // -------------------------------------------------
-
-
-
-    if (!admin && student) {
-
-        populateStudentProfileFilters();
-
-    }
-
-}
 
 // =====================================================
 // Update Upload Panel
@@ -1809,8 +1402,6 @@ export function applyRoleUI() {
 
     }
 
-updateStudentFilters();
-updateStudentRoleUI();
 updateUploadPanel();
 
 updateSearchVisibility();
@@ -2287,12 +1878,6 @@ if (role === "admin") {
 
 // Search Filters
 
-populateCourses($("searchCourse"));
-
-populateCourses($("pyqSearchCourse"));
-
-populateCourses($("timetableSearchCourse"));
-
 
 
 // Dependent dropdowns
@@ -2322,8 +1907,6 @@ updateNoteFields();
 updatePyqFields();
 
 updateTimetableFields();
-
-updateStudentFilters();
 
 updateUploadPanel();
 
