@@ -25,7 +25,7 @@
 // open the site once with:  ?api=https://techcampushub-backend.onrender.com
 //
 (function () {
-    const PROD_API = "https://techcampushub-backend.onrender.com";
+    const PROD_API = "https://techcampus-hub-backend.onrender.com";
     const LOCAL_API = "http://localhost:8080";
 
     let api = "";
