@@ -1,6 +1,26 @@
 # Deploying TechCampus Hub
 
-The whole project deploys from one **Render Blueprint** (`render.yaml`):
+## Current production setup
+
+| Resource | Where | URL / notes |
+|---|---|---|
+| Frontend | **Vercel** (static) | <https://techcampushub-frontend.vercel.app> |
+| Backend | **Render** (Docker, free) | <https://techcampus-hub-backend.onrender.com> |
+| Database | **Render Postgres** (free) | `techcampushub-db` — free instance expires **Dec 28, 2026** |
+
+- Backend health: <https://techcampus-hub-backend.onrender.com/api/health>
+- Render service name: `techcampus-hub-backend` (hyphenated — it is **not**
+  `techcampushub-backend`; `js/env.js` and `render.yaml` must match this).
+- Required backend env vars: `PG_CONNECTION_URL` (Internal Database URL),
+  `JWT_SECRET`, `APP_BASE_URL`, `CORS_ALLOWED_ORIGINS` (must include the Vercel
+  origin), `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `REQUIRE_EMAIL_VERIFICATION=false`.
+- Pushing to `main` redeploys the Vercel frontend automatically. The Render
+  backend may need **Manual Deploy** if auto-deploy is off.
+
+---
+
+The Render Blueprint below provisions the same stack entirely on Render
+(backend + Postgres + static site):
 
 | Resource | Name | What it is |
 |---|---|---|
